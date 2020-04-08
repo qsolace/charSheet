@@ -10,6 +10,7 @@ public class Fighter {
     private int level = 1;
     private int profBonus = 2;
     private int hitDie = 10;
+    private int skillNumber = 2;
 
     private String equippedArmor = "";
     private int armorClass = 10;
@@ -25,6 +26,9 @@ public class Fighter {
 
     private String weapons[] = new String[]{"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""};
     private int weaponIndex = 0;
+
+    private String armor[] = new String[]{"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""};
+    private int armorIndex = 0;
 
     private int speed;
     private int darkvisionRange;
@@ -57,6 +61,10 @@ public class Fighter {
          }
          assignStats();
      }
+
+    public void setHitDie(int hitDie) {
+        this.hitDie = hitDie;
+    }
 
     public void addLanguages(String[] languages) {
 
@@ -125,6 +133,10 @@ public class Fighter {
          }
          return statReturn;
      }
+
+    public int getHitDie() {
+        return hitDie;
+    }
 
     public String assignedReturnStats ()//returns assigned stat list
     {
@@ -257,6 +269,7 @@ public class Fighter {
         createSavingThrow();
         System.out.println(isEKnight);
 
+
         hitPoints = hitDie + statModifiers[2];
         if (strFighter)
         {
@@ -365,5 +378,46 @@ public class Fighter {
 
     }
 
+    public String[] decideSkills(int numberOfSkills)
+    {
+        Random rand = new Random();
+        String [] skillSelection = new String [numberOfSkills];
+        String skillList[] = {"Acrobatics", "Animal Handling", "Athletics", "History", "Insight", "Intimidation", "Perception", "Survival"};
+        for (int i = 0; i < numberOfSkills; i++)
+        {
+            if (skillList.length == 0)
+            {
+                skillSelection[i] = "";
+                return skillSelection;
+            }
+            int skillLocation = rand.nextInt(skillList.length);
+            skillSelection[i] = skillList[skillLocation];
+            skillList = removeItem(skillList, skillLocation);
+            for (int j = 0; j < skills.length; j++)
+            {
+                if (skills[j].equalsIgnoreCase(skillSelection[i]))
+                {
 
+                    i--;
+                    break;
+                }
+            }
+
+        }
+        return skillSelection;
+    }
+
+    private String[] removeItem(String[] array, int index)
+    {
+        String[] newArray = new String[array.length-1];
+        for (int i=0; i<index;i++)
+        {
+            newArray[i] = array[i];
+        }
+        for (int i = index+1; i < array.length; i++)
+        {
+            newArray[i-1] = array[i];
+        }
+        return newArray;
+    }
 }

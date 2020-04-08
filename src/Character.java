@@ -31,17 +31,21 @@ public class Character {
 
         Fighter fight = new Fighter();
 
-        fight.addStatNumbers(scoreArray);
-        System.out.println(fight.orderedReturnStats());
-        System.out.println(fight.assignedReturnStats());
-        fight.createModifiers();
-        System.out.println(fight.modifierReturn());
-        fight.createFirstLevel();
-        System.out.println(fight.assignedReturnStats());
-        System.out.println("HP: " + fight.getHitPoints());
-        System.out.println("AC: " + fight.getArmorClass());
-        System.out.println("Saves: " + fight.saveModReturn());
-        System.out.println("Languages: "+ fight.getLanguages()[0] + fight.getLanguages()[1] + fight.getLanguages()[2]);
+//        fight.addStatNumbers(scoreArray);
+//        System.out.println(fight.orderedReturnStats());
+//        System.out.println(fight.assignedReturnStats());
+//        fight.createModifiers();
+//        System.out.println(fight.modifierReturn());
+//        fight.createFirstLevel();
+//        System.out.println(fight.assignedReturnStats());
+//        System.out.println("HP: " + fight.getHitPoints());
+//        System.out.println("AC: " + fight.getArmorClass());
+//        System.out.println("Saves: " + fight.saveModReturn());
+//        System.out.println("Languages: "+ fight.getLanguages()[0] + fight.getLanguages()[1] + fight.getLanguages()[2]);
+        for (int i = 0; i < 50; i++) {
+            String[] stringArray = fight.decideSkills(2);
+            System.out.println(stringArray[0] + stringArray[1]);
+        }
 
 
     }
