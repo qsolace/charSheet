@@ -1,21 +1,32 @@
 public class Human {
-    private int statIncrease[] = {1, 1, 1, 1, 1, 1};
-    private int speed = 30;
-    private int darkvisionRange = 0;
+    private static int statIncrease[] = {1, 1, 1, 1, 1, 1};
+    private static int speed = 30;
+    private static int darkvisionRange = 0;
 
-    private String languages[] = {"Common", "choice"};
-    private String skills[] = {};
-    private String tools[] = {};
-    private String weapons[] = {};
+    private static String languages[] = {"Common", "choice"};
+    private static String skills[] = {};
+    private static String tools[] = {};
+    private static String weapons[] = {};
 
-    public void applyAncestry(Fighter className)
+//    public void applyAncestry(Stats stats)
+//    {
+//        for (int i = 0; i < stats.scores.length; i++)
+//        {
+//            className.assignedStats[i] += statIncrease[i];
+//        }
+//
+//        className.setSpeed(speed);
+//        className.setDarkvisionRange(darkvisionRange);
+//    }
+    public static void applyAncestry(Stats stats, Proficiency proficiency, Features features)
     {
-        for (int i = 0; i < className.assignedStats.length; i++)
+        for (int i = 0; i < stats.scores.length; i++)
         {
-            className.assignedStats[i] += statIncrease[i];
+            stats.scores[i] += statIncrease[i];
         }
-        className.addLanguages(languages);
-        className.setSpeed(speed);
-        className.setDarkvisionRange(darkvisionRange);
+
+        proficiency.addLanguage(languages);
+        features.setDarkvisionRange(darkvisionRange);
+        features.setSpeed(speed);
     }
 }

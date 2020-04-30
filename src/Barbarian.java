@@ -1,20 +1,16 @@
 import javax.swing.*;
 import java.awt.*;
-import java.util.Random;
 import java.io.*;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 
-public class Fighter extends JFrame{
+public class Barbarian extends JFrame{
 
-    Fighter (Stats stat, String ancestry)
+    Barbarian(Stats stat, String ancestry)
     {
         this.ancestry= ancestry;
         this.stat = stat;
     }
 
-    Fighter (Stats stat)
+    Barbarian(Stats stat)
     {
         this.stat = stat;
     }
@@ -31,15 +27,17 @@ public class Fighter extends JFrame{
     private int hitPoints = 0;
     private int level = 1;
     private int profBonus = 2;
-    private int hitDie = 10;
+    private int hitDie = 12;
     private int bonusHP = 0;
     private int skillNumber = 2;
     private String ancestry;
-    private int fightingStyle;
+    private int rageBonus = 2;
+    private boolean shieldEquip = false;
+    private boolean isMedium = true;
+    private int rageUses = 2;
 
     private String equippedArmor = "";
     private int armorClass = 10;
-    private boolean shieldEquip = false;
 
 
     private Proficiency proficiency = new Proficiency();
@@ -91,7 +89,7 @@ public class Fighter extends JFrame{
 //        File output = new File("C:\\Users\\ryan_\\OneDrive\\Desktop\\Greenhill-DESKTOP-7HM548H\\10th Grade\\AP Comp Sci\\" + Character.seedString.stripTrailing() + ".txt");
 //        FileWriter print = new FileWriter(output);
         Writer print = new StringWriter();
-        print.write("Name: " + Character.seedString.stripTrailing() + "        " + ancestry + " Fighter " + level + "\n\n");
+        print.write("Name: " + Character.seedString.stripTrailing() + "        " + ancestry + " Barbarian " + level + "\n\n");
         print.write("AC: " + armorClass + "         HP: " + (hitPoints +bonusHP)+ "       Speed: " + features.getSpeed() + "ft\n\n");
         for (int i = 0; i < stat.modifier.length; i++) {
             print.write(statNames[i] + ": " + stat.scores[i] + "(");
@@ -161,10 +159,7 @@ public class Fighter extends JFrame{
                 {
                     attackBonus += profBonus;
                 }
-                if (!Weapons.ranged(inventory.getWeapons()[i]).isEmpty() && fightingStyle == 1)
-                {
-                    attackBonus+=2;
-                }
+
                 if (attackBonus >= 0) {
                     outputString += ("+");
                     attackSign = '+';
@@ -187,9 +182,7 @@ public class Fighter extends JFrame{
                         damageBonus = stat.modifier[1];//adding damage modifier
                     }
 
-                    if (Weapons.isMelee(inventory.getWeapons()[i]) && !Weapons.isTwoHanded(inventory.getWeapons()[i]) && fightingStyle == 3) {
-                        damageBonus += 2;
-                    }
+
                     outputString += (damageBonus + " " + Weapons.damageType(inventory.getWeapons()[i]));//damage type
                 }
                 else
@@ -197,12 +190,16 @@ public class Fighter extends JFrame{
                     bonusSign = '-';
                 }
                 print.write(outputString);
+                print.write("  |  Rage Bonus: " + rageBonus);
 
                 if (!Weapons.versatile(inventory.getWeapons()[i]).equalsIgnoreCase("Not Versatile")) {
 
                     print.write("\n" + inventory.getWeapons()[i] + "(two-handed) " + attackSign + attackBonus + " " + Weapons.versatile(inventory.getWeapons()[i]) +
                             bonusSign + damageBonus + " " + Weapons.damageType(inventory.getWeapons()[i]));
+                    print.write("  |  Rage Bonus: " + rageBonus);
                 }
+
+
 
                 outputString = Weapons.thrown(inventory.getWeapons()[i]) + Weapons.ranged(inventory.getWeapons()[i]);
                 if (!outputString.isEmpty()) {
@@ -214,6 +211,7 @@ public class Fighter extends JFrame{
                 if (Weapons.isHeavy(inventory.getWeapons()[i])) {
                     print.write("  |  Heavy");
                 }
+
                 print.write("\n");
             }
 
@@ -297,11 +295,13 @@ public class Fighter extends JFrame{
         jFileChooser.showSaveDialog(frame);
 
         String path = "";
+
         try {
             path = jFileChooser.getSelectedFile().getAbsolutePath();
         }
         catch (java.lang.NullPointerException e)
         {
+
             System.exit(0);
         }
 
@@ -321,64 +321,46 @@ public class Fighter extends JFrame{
         int[] stats = stat.scores;
         int[] assignedStats = new int[6];
 
-        strFighter = Character.rand.nextBoolean();//randomly determines if Str should be highest.
 
-        if (strFighter)//if Str should be highest, does that and makes dex 3rd lowest
-        {
-            assignedStats[0] = stats[5];
-            assignedStats[1] = stats[2];
-        } else//otherwise, flip them
-        {
-            assignedStats[1] = stats[5];
-            assignedStats[0] = stats[2];
-        }
 
+        assignedStats[0] = stats[5];
+        assignedStats[1] = stats[3];
         assignedStats[2] = stats[4];//Assign Con as second highest stat.
 
-        if (isEKnight)//if EK, Int is highest mental, then W/C randomly
-        {
-            assignedStats[3] = stats[3];
 
-            int randomNum = Character.rand.nextInt(2);
-
-            assignedStats[4] = stats[randomNum];
-            assignedStats[5] = stats[Math.abs(randomNum - 1)];
-        } else {//assigning mental stats. Random which is which.
-
-            switch (Character.rand.nextInt(6)) {//the worst thing I've ever done. This will look better later
-                case 0:
-                    assignedStats[3] = stats[3];
-                    assignedStats[4] = stats[0];
-                    assignedStats[5] = stats[1];
-                    break;
-                case 1:
-                    assignedStats[3] = stats[3];
-                    assignedStats[4] = stats[1];
-                    assignedStats[5] = stats[0];
-                    break;
-                case 2:
-                    assignedStats[3] = stats[1];
-                    assignedStats[4] = stats[3];
-                    assignedStats[5] = stats[0];
-                    break;
-                case 3:
-                    assignedStats[3] = stats[1];
-                    assignedStats[4] = stats[0];
-                    assignedStats[5] = stats[3];
-                    break;
-                case 4:
-                    assignedStats[3] = stats[0];
-                    assignedStats[4] = stats[1];
-                    assignedStats[5] = stats[3];
-                    break;
-                case 5:
-                    assignedStats[3] = stats[0];
-                    assignedStats[4] = stats[3];
-                    assignedStats[5] = stats[1];
-                    break;
+        switch (Character.rand.nextInt(6)) {//the worst thing I've ever done. This will look better later
+            case 0:
+                assignedStats[3] = stats[3];
+                assignedStats[4] = stats[0];
+                assignedStats[5] = stats[1];
+                break;
+            case 1:
+                assignedStats[3] = stats[3];
+                assignedStats[4] = stats[1];
+                assignedStats[5] = stats[0];
+                break;
+            case 2:
+                assignedStats[3] = stats[1];
+                assignedStats[4] = stats[3];
+                assignedStats[5] = stats[0];
+                break;
+            case 3:
+                assignedStats[3] = stats[1];
+                assignedStats[4] = stats[0];
+                assignedStats[5] = stats[3];
+                break;
+            case 4:
+                assignedStats[3] = stats[0];
+                assignedStats[4] = stats[1];
+                assignedStats[5] = stats[3];
+                break;
+            case 5:
+                assignedStats[3] = stats[0];
+                assignedStats[4] = stats[3];
+                assignedStats[5] = stats[1];
+                break;
 
 
-            }
         }
         stat.setScores(assignedStats);
     }
@@ -399,73 +381,50 @@ public class Fighter extends JFrame{
 //            System.out.println(weapons[i]);
 //        }
 
-        System.out.println(isEKnight);
         decideSkills(2);
         proficiency.addWeapon(assignWeaponProf());
         proficiency.addArmor(assignArmorProf());
-
+        armorClass = stat.modifier[1] + stat.modifier[2] + 10;
 
         hitPoints = hitDie + stat.modifier[2];
-        if (strFighter) {
-            equippedArmor = "Chain Mail";
-            armorClass = 16;
-        } else {
-            equippedArmor = "Leather Armor";
-            armorClass = 11 + stat.modifier[1];
 
-            inventory.addWeapon("Longbow");
-//            weaponInventoryIndex
-        }
-
-        if (strFighter) {
-            inventory.addWeapon("Handaxe", "Handaxe");
-        } else {
-            inventory.addWeapon("Light Crossbow");
-            inventory.addMisc("20 bolts");
-        }
 
         boolean shieldMartial = Character.rand.nextBoolean();
         int weaponAmount = 1;
         String[] weaponOptions;
-        if (!strFighter) {
-            if (shieldMartial) {
-                weaponOptions = Weapons.oneHandedWeapon(Weapons.martialDex());
-                inventory.addArmor("Shield");
-                armorClass+=2;
-                shieldEquip = true;
-            } else {
-                weaponOptions = Weapons.martialDex();
-                weaponAmount = 2;
-            }
-        } else {
-            if (shieldMartial) {
-                weaponOptions = Weapons.oneHandedWeapon(Weapons.martialStr());
-                inventory.addArmor("Shield");
-                armorClass+=2;
-                shieldEquip = true;
-            } else {
-                weaponOptions = Weapons.martialStr();
-                weaponAmount = 2;
-            }
+        if (isMedium)
+        {
+            weaponOptions = new String[]{"Greataxe", "Greatsword", "Maul"};
         }
+        else
+        {
+            weaponOptions = new String[]{"Longsword", "Battleaxe", "Warhammer"};
+        }
+        System.out.println("TEST:"+ weaponOptions[2]);
         String weaponChoice = "";
         for (int i = 0; i < weaponAmount; i++) {
             weaponChoice = weaponOptions[Character.rand.nextInt(weaponOptions.length)];
             inventory.addWeapon(weaponChoice);
         }
 
-        if (Character.rand.nextBoolean())
-        {
-            inventory.addDungeonerPack();
-        }
-        else
-        {
-            inventory.addExplorersPack();
-        }
-        fightingStyleDetermination(weaponChoice);
-        features.addFeature("Second Wind", "You have a limited well of stamina that you can draw on to protect yourself from harm. " +
-                "On your turn, you can use a bonus action to regain hit points equal to 1d10 + your fighter level. " +
-                "Once you use this feature, you must finish a short or long rest before you can use it again.");
+
+
+        inventory.addExplorersPack();
+        inventory.addWeapon("Handaxe", "Handaxe","Javelin", "Javelin", "Javelin", "Javelin");
+        features.addFeature("Rage", "In battle, you fight with primal ferocity. On your turn, you can enter a rage as a bonus action.\n" +
+                "\n" +
+                "While raging, you gain the following benefits if you aren’t wearing heavy armor:\n" +
+                "\n" +
+                "- You have advantage on Strength checks and Strength saving throws.\n" +
+                "- When you make a melee weapon attack using Strength, you gain a bonus to the damage roll that increases as you gain levels as a barbarian, as shown in the Rage Damage column of the Barbarian table ("+rageBonus+").\n" +
+                "- You have resistance to bludgeoning, piercing, and slashing damage.\n" +
+                "If you are able to cast spells, you can’t cast them or concentrate on them while raging.\n" +
+                "\n" +
+                "Your rage lasts for 1 minute. It ends early if you are knocked unconscious or if your turn ends and you haven’t attacked a hostile creature since your last turn or taken damage since then. You can also end your rage on your turn as a bonus action.\n" +
+                "\n" +
+                "Once you have raged "+rageUses+" times, you must finish a long rest before you can rage again.");
+
+        features.addFeature("Unarmored Defense", "While you are not wearing any armor, your Armor Class equals 10 + your Dexterity modifier + your Constitution modifier. You can use a shield and still gain this benefit.");
 
         inventory.addArmor(equippedArmor);
         stat.addSaveProficiency(proficientSave);
@@ -477,45 +436,10 @@ public class Fighter extends JFrame{
         String ancestry = userAncestry;
         if (ancestry.isEmpty()) {
             int[] stats = stat.scores;
-            int ancestryChance[] = {2, 2, 1, 1, 1, 1, 1};
+            int ancestryChance[] = {3, 3, 2, 2, 2, 1, 1};
             String ancestryName[] = {"Mountain Dwarf", "Hill Dwarf", "Human", "High Elf", "Wood Elf", "Lightfoot Halfling", "Stout Halfling"};
             //mountain dwarf, hill dwarf, human, high elf, wood elf, lightfoot halfling, stout halfling
-            if (strFighter) {
-                ancestryChance[0] += 4;
-                ancestryChance[1] += 2;
 
-                if (stats[0] % 2 == 1) {
-                    ancestryChance[2] += 4;
-                }
-                if (stats[2] % 2 == 1) {
-                    ancestryChance[2] += 2;
-                }
-                if (isEKnight && stats[3] % 2 == 1) {
-                    ancestryChance[2] += 2;
-                    ancestryChance[3] += 2;
-                }
-            } else {
-                ancestryChance[3] += 2;
-                ancestryChance[4] += 2;
-                ancestryChance[5] += 2;
-
-                if (stats[2] % 2 == 1) {
-                    ancestryChance[6] += 4;
-                } else {
-                    ancestryChance[6] += 2;
-                }
-
-                if (stats[1] % 2 == 1) {
-                    ancestryChance[2] += 4;
-                }
-                if (stats[2] % 2 == 1) {
-                    ancestryChance[2] += 2;
-                }
-                if (isEKnight && stats[3] % 2 == 1) {
-                    ancestryChance[2] += 2;
-                    ancestryChance[3] += 4;
-                }
-            }
 
 
             int totalWeight = 0;
@@ -550,10 +474,12 @@ public class Fighter extends JFrame{
         else if (ancestry.equalsIgnoreCase("Lightfoot Halfling"))
         {
             Halfling.applyAncestry("Lightfoot Halfling", stat, proficiency, features);
+            isMedium = false;
         }
         else if (ancestry.equalsIgnoreCase("Stout Halfling"))
         {
             Halfling.applyAncestry("Stout Halfling", stat, proficiency, features);
+            isMedium = false;
         }
         else if (ancestry.equalsIgnoreCase("High Elf"))
         {
@@ -573,10 +499,10 @@ public class Fighter extends JFrame{
     public void decideSkills(int numberOfSkills) {
         String[][] skillList = {
                 {"Athletics"},
-                {"Acrobatics"},
                 {},
-                {"History"},
-                {"Animal Handling", "Insight", "Perception", "Survival"},
+                {},
+                {"Nature"},
+                {"Animal Handling", "Perception", "Survival"},
                 {"Intimidation"}
         };
 
@@ -599,7 +525,7 @@ public class Fighter extends JFrame{
     }
 
     private String[] assignArmorProf() {
-        String armorList[] = {"Leather", "Studded Leather", "Padded", "Hide", "Breastplate", "Chain Shirt", "Half Plate", "Ring Mail", "Scale Mail", "Spiked Armor", "Chain Mail", "Splint", "Plate", "Shield"};
+        String armorList[] = {"Leather", "Studded Leather", "Padded", "Hide", "Breastplate", "Chain Shirt", "Half Plate", "Scale Mail", "Spiked Armor", "Shield"};
 
         proficiency.addArmor(armorList);
         return armorList;
@@ -617,69 +543,7 @@ public class Fighter extends JFrame{
 //----------------------------------------------------------------------------------------------------------------------
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Ability Fun Times<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 //----------------------------------------------------------------------------------------------------------------------
-    private int fightingStyleDetermination (String weapon)
-    {
-        int[] FSChance = {2, 0, 0, 0, 0, 0};
-        int FSIndex = 1;
 
-        if (Weapons.isMelee(weapon))
-        {
-            if (Weapons.isTwoHanded(weapon)) {
-                FSChance[FSIndex] = 4;
-            }
-            else
-            {
-                FSChance[FSIndex] = 3;
-            }
-            FSIndex++;
-        }
-        if (!Weapons.ranged(weapon).isEmpty())
-        {
-            FSChance[FSIndex] = 1;
-            FSIndex++;
-        }
-        if (shieldEquip)
-        {
-            FSChance[FSIndex] = 5;
-            FSIndex++;
-        }
-        if (Weapons.isLight(weapon)&&Weapons.isMelee(weapon))
-        {
-            FSChance[FSIndex] = 6;
-            FSIndex++;
-        }
-
-        fightingStyle = FSChance[Character.rand.nextInt(FSIndex)];
-        if (fightingStyle == 2)
-        {
-            armorClass+=1;
-        }
-
-        switch (fightingStyle){
-            case 1:
-                features.addFeature("Fighting Style: Archery", "You gain a +2 bonus to attack rolls you make with ranged weapons.");
-                break;
-            case 2:
-                features.addFeature("Fighting Style: Defense", "While you are wearing armor, you gain a +1 bonus to AC");
-                break;
-            case 3:
-                features.addFeature("Fighting Style: Dueling", "When you are wielding a melee weapon in one hand and no other weapons, you gain a +2 bonus to damage rolls with that weapon.");
-                break;
-            case 4:
-                features.addFeature("Fighting Style: Great Weapon Fighting", "When you roll a 1 or 2 on a damage die for an attack you make with a melee weapon that you are wielding with two hands, you can reroll the die and must use the new roll, " +
-                        "even if the new roll is a 1 or a 2. The weapon must have the two-handed or versatile property for you to gain this benefit.");
-                break;
-            case 5:
-                features.addFeature("Fighting Style: Protection", "When a creature you can see attacks a target other than you that is within 5 feet of you, " +
-                        "you can use your reaction to impose disadvantage on the attack roll. You must be wielding a shield.");
-                break;
-            case 6:
-                features.addFeature("Fighting Style: Two-Weapon Fighting", "When you engage in two-weapon fighting, you can add your ability modifier to the damage of the second attack.");
-        }
-
-        return fightingStyle;
-
-    }
 
 }
 
