@@ -290,7 +290,7 @@ public class Barbarian extends JFrame{
 
         JFrame frame = new JFrame();
         frame.setSize(new Dimension(300, 300));
-        JFileChooser jFileChooser = new JFileChooser("C:");
+        JFileChooser jFileChooser = new JFileChooser();
         jFileChooser.setDialogTitle("Where do you want to save " + Character.seedString.stripTrailing() + "?");
         jFileChooser.showSaveDialog(frame);
 

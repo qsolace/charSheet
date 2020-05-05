@@ -292,7 +292,7 @@ public class Fighter extends JFrame{
 
         JFrame frame = new JFrame();
         frame.setSize(new Dimension(300, 300));
-        JFileChooser jFileChooser = new JFileChooser("C:");
+        JFileChooser jFileChooser = new JFileChooser("C:\\Users\\ryan_\\OneDrive\\Desktop\\Greenhill-DESKTOP-7HM548H\\10th Grade\\AP Comp Sci");
         jFileChooser.setDialogTitle("Where do you want to save " + Character.seedString.stripTrailing() + "?");
         jFileChooser.showSaveDialog(frame);
 
