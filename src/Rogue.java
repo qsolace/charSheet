@@ -1,19 +1,23 @@
+//This is one of the three "class" classes, which is really some confusing terminology...
+//This one, the Rogue, as unique features including Expertise (an addition to skills), Sneak Attack (an addition to weapons),
+//and Tools Proficiencies.
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 
-public class Rogue {
+public class Rogue {//the majority of Rogue is the same as fighter. I'll mark the different spots.
     public Stats stat = new Stats();
     public Features features = new Features();
 
     private String[] statNames = {"Strength", "Dexterity", "Constitution", "Intelligence", "Wisdom", "Charisma"};
-    private int[] proficientSave = {1, 3};
+    private int[] proficientSave = {1, 3};//different proficient saves
     private int hitPoints = 0;
     private int level = 1;
     private int profBonus =2;
-    private int hitDie = 8;
+    private int hitDie = 8;//has a smaller hit die
     private int bonusHP = 0;
-    private int skillNumber = 4;
+    private int skillNumber = 4;//has more skills
     private String ancestry;
 
     private String equippedArmor = "";
@@ -33,8 +37,7 @@ public class Rogue {
         this.stat = stat;
     }
 
-    Rogue ()
-    {}
+
 
 //----------------------------------------------------------------------------------------------------------------------
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>INPUT<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
@@ -75,8 +78,7 @@ public class Rogue {
 
     public void fileOutput() throws IOException{
         Writer print = new StringWriter();
-//        FileWriter print = new FileWriter(output);
-        print.write("Name: " + Character.seedString.stripTrailing() + "        " + ancestry + " Rogue " + level + "\n\n");
+        print.write("Name: " + Character.seedString.stripTrailing() + "        " + ancestry + " Rogue " + level + "\n\n");//changed class name
         print.write("AC: " + armorClass + "         HP: " + (hitPoints +bonusHP)+ "       Speed: " + features.getSpeed() + "ft\n\n");
         for (int i = 0; i < stat.modifier.length; i++) {
             print.write(statNames[i] + ": " + stat.scores[i] + "(");
@@ -105,7 +107,7 @@ public class Rogue {
             for (int j = 0; j < proficiency.getSkills()[i].length; j++) {
                 if (!proficiency.getSkills()[i][j].isEmpty()) {
                     int bonus = profBonus + stat.modifier[i];
-                    if (proficiency.isExpertise(proficiency.getSkills()[i][j]))
+                    if (proficiency.isExpertise(proficiency.getSkills()[i][j]))//has to test if the skill is "expertise" if it is, it adds the proficiency bonus again
                     {
                         bonus += profBonus;
                     }
@@ -119,9 +121,9 @@ public class Rogue {
 
 
         }
-        print.write("Thieves' Tools: ");
+        print.write("Thieves' Tools: ");//adds thieves' tools proficiency
         int theivesBonus = stat.modifier[1] + profBonus;
-        if (proficiency.isExpertise("Thieves' Tools"))
+        if (proficiency.isExpertise("Thieves' Tools"))//tests if expertise
         {
             theivesBonus += profBonus;
         }
@@ -208,7 +210,7 @@ public class Rogue {
                 }
                 if (Weapons.isDex(inventory.getWeapons()[i]))
                 {
-                    print.write("  |  Sneak Attack: " + (int)Math.floor((level+1)/2.0)+"d6");
+                    print.write("  |  Sneak Attack: " + (int)Math.floor((level+1)/2.0)+"d6");//dex weapons get "Sneak Attack" This adds a number of dice dependant on level. This trait is added after all the other traits.
                 }
                 print.write("\n");
             }
@@ -287,7 +289,7 @@ public class Rogue {
 
         JFrame frame = new JFrame();
         frame.setSize(new Dimension(300, 300));
-        JFileChooser jFileChooser = new JFileChooser();
+        JFileChooser jFileChooser = new JFileChooser("C:");
         jFileChooser.setDialogTitle("Where do you want to save " + Character.seedString.stripTrailing() + "?");
         jFileChooser.showSaveDialog(frame);
         String path = "";
@@ -323,7 +325,7 @@ public class Rogue {
         assignedStats[2] = stats[3];//Assign Con as third highest stat.
 
 
-        switch (Character.rand.nextInt(6)) {//the worst thing I've ever done. This will look better later
+        switch (Character.rand.nextInt(6)) {//the worst thing I've ever done. Adds the mental stats
             case 0:
                 assignedStats[3] = stats[4];
                 assignedStats[4] = stats[2];
@@ -380,14 +382,14 @@ public class Rogue {
 
         hitPoints = hitDie + stat.modifier[2];
 
-        equippedArmor = "Leather Armor";
-        armorClass = 11 + stat.modifier[1];
+        equippedArmor = "Leather Armor";//adds armor
+        armorClass = 11 + stat.modifier[1];//determines armor class based on that armor
 
-        inventory.addWeapon("Dagger", "Dagger");
-        inventory.addTool("Thieves' Tools");
+        inventory.addWeapon("Dagger", "Dagger");//adds two daggers to the inventory
+        inventory.addTool("Thieves' Tools");//ands thieves' tools to the inventory
 //            weaponInventoryIndex
 
-        if (Character.rand.nextBoolean())
+        if (Character.rand.nextBoolean())//randomized what weapons the rogue will get
         {
             inventory.addWeapon("Shortbow", "Rapier");
             inventory.addMisc("Quiver with 20 arrows");
@@ -398,7 +400,7 @@ public class Rogue {
         }
 
 
-        switch (Character.rand.nextInt(3))
+        switch (Character.rand.nextInt(3))//randomizes what random packs the rogue will get
         {
             case 0:
                 inventory.addExplorersPack();
@@ -410,11 +412,10 @@ public class Rogue {
                 inventory.addBurglarsPack();
                 break;
         }
-        //expertise
+        //expertise determination
         String[] skillsT = proficiency.skillsOneDArray();
-        System.out.println("The thing: " + proficiency.skillsOneDArray().length);
         int randomization = -1;
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 2; i++) {//chooses two out of all proficienct skills and thieves' tools to add expertise to
             int tempInt = Character.rand.nextInt(skillsT.length + 1);
             System.out.println(tempInt + " " + randomization);
             if (tempInt!=randomization) {
@@ -432,7 +433,7 @@ public class Rogue {
         }
 
 
-
+        //add rogue features
         features.addFeature("Sneak Attack", "Beginning at 1st level, you know how to strike subtly and exploit a foe’s distraction. " +
                 "Once per turn, you can deal an extra 1d6 damage to one creature you hit with an attack if you have advantage on the attack roll. " +
                 "The attack must use a finesse or a ranged weapon.\n\n"+
@@ -460,7 +461,7 @@ public class Rogue {
             String ancestryName[] = {"Mountain Dwarf", "Hill Dwarf", "Human", "High Elf", "Wood Elf", "Lightfoot Halfling", "Stout Halfling"};
 
 
-            if (stat.scores[2]%2==1)
+            if (stat.scores[2]%2==1)//chance numbers have changed
             {
                 ancestryChance[2] += 1;
                 ancestryChance[6] += 2;
@@ -486,7 +487,6 @@ public class Rogue {
 
             ancestry = ancestryName[ancestryNumber];
         }
-            System.out.println("ANCESTRY!!!!" + ancestry);
 
             if (ancestry.compareToIgnoreCase("human") == 0) {
                 Human.applyAncestry(stat, proficiency, features);
@@ -513,7 +513,7 @@ public class Rogue {
 
     }
 
-    public void decideSkills(int numberOfSkills) {
+    public void decideSkills(int numberOfSkills) {//skill deciding. It has different skills than the fighter.
         String[][] skillList = {
                 {"Athletics"},
                 {"Acrobatics", "Sleight of Hand", "Stealth"},
@@ -522,7 +522,6 @@ public class Rogue {
                 {"Insight", "Perception"},
                 {"Deception", "Performance", "Intimidation", "Persuasion"}
         };
-        System.out.println("THing 1:" + numberOfSkills);
         for (int j = 0; j < numberOfSkills; j++) {
             int skillNumber = Character.rand.nextInt(Proficiency.countMultArray(skillList));
 
@@ -542,7 +541,7 @@ public class Rogue {
         }
     }
 
-    private String[] assignArmorProf() {
+    private String[] assignArmorProf() {//adds all the proficiencies.
         String armorList[] = {"Leather", "Studded Leather", "Padded", "Hide"};
 
         proficiency.addArmor(armorList);
@@ -560,10 +559,5 @@ public class Rogue {
         proficiency.addWeapon(toolList);
         return toolList;
     }
-
-
-    //----------------------------------------------------------------------------------------------------------------------
-//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Ability Fun Times<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-//----------------------------------------------------------------------------------------------------------------------
 
 }

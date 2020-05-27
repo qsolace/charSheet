@@ -1,3 +1,6 @@
+//This keeps track of all the skills and proficiencies. It stores them in an array, and has a bunch of functions that
+//help me access them.
+
 import java.util.Arrays;
 public class Proficiency {
 
@@ -9,7 +12,7 @@ public class Proficiency {
     public String[] getWeapons() {
         return weapons;
     }
-    public String getWeaponsToString()
+    public String getWeaponsToString()//export all weapons as a string, removing blank values
     {
 
         String returnString = "";
@@ -20,7 +23,7 @@ public class Proficiency {
         }
         return returnString;
     }
-    public void  addWeapon(String... newWeapon)
+    public void  addWeapon(String... newWeapon)//add a number of weapon proficiencies to the list, as long as they are unique
     {
 
         for (int i = 0; i<newWeapon.length; i++)
@@ -39,7 +42,7 @@ public class Proficiency {
             }
         }
     }
-    public boolean isProficientWeapon (String weaponName)
+    public boolean isProficientWeapon (String weaponName)//returns whether or not the inputted string is in the proficiency list
     {
         for (int i = 0; i < weapons.length; i++)
         {
@@ -56,7 +59,7 @@ public class Proficiency {
     }
 
     private String armor[] = {"", "", "", "", "", "", "", "", "", "", "", "", "", ""};
-    private int armorIndex =0;
+    private int armorIndex =0;//same as weapons
 
     public String[] getArmor() {
         return armor;
@@ -91,7 +94,7 @@ public class Proficiency {
     }
 
     private String language[] = {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""};
-    private int languageIndex =0;
+    private int languageIndex =0;//same as weapons
 
     public String[] getLanguage() {
         return language;
@@ -127,7 +130,7 @@ public class Proficiency {
 
 
     private String tools[] = {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""};
-    private int toolIndex =0;
+    private int toolIndex =0;//same as weapons
 
     public String[] getTools() {
         return tools;
@@ -158,7 +161,81 @@ public class Proficiency {
             toolIndex ++;
         }
     }
-    private String[] expertise =
+
+
+
+    private String skills[][] = {//skills are tied to ability scores. The array is organized based on what ability score it is tied to.
+            {""},//Strength
+            {"", "", ""},//Dexterity
+            {},//Constitution
+            {"", "", "", "", ""},//Intelligence
+            {"", "", "", "", ""},//Wisdom
+            {"", "", "", ""}//Charisma
+    };
+
+    private int skillIndex[] = {0, 0, 0, 0, 0, 0};//what point in each ability score you are
+    public void resetSkills()
+    {
+        Arrays.fill(skills, "");//fills everything with blank
+    }
+    public String[][] getSkills() {
+        return skills;//returns the 2D array
+    }
+    public String[] skillsOneDArray()//exports as a 1 D array, removing blanks
+    {
+        String[] skillReturn = new String[18];
+        int skillReturnIndex = 0;
+        for (int j = 0; j < skills.length; j++) {
+            for (int i = 0; i < skills[j].length; i++) {
+                if (!skills[j][i].isEmpty()) {
+                    skillReturn[skillReturnIndex] = skills[j][i];
+                    System.out.println(skillReturn[skillReturnIndex]);
+                    skillReturnIndex++;
+                }
+            }
+        }
+
+        String[] realReturn = new String [skillReturnIndex];
+        ArrayFunctions.copyArray(realReturn, skillReturn);
+        return realReturn;
+
+    }
+
+    public String getSkillsToString()//puts it out as a string, removing duplicates
+    {
+        String returnString = "";
+        for (int j = 0; j < skills.length; j++) {
+            for (int i = 0; i < skills[j].length; i++) {
+                if (!skills[j][i].isEmpty()) {
+                    returnString = returnString + skills[j][i] + " ";
+                }
+            }
+        }
+        return returnString;
+    }
+    public int addSkill(int abilityScore, String... newSkill)//adds a skill, using the ability score to decide where to assign it.
+    {
+        int repeat = 0;
+        for (int i = 0; i<newSkill.length; i++)
+        {
+            boolean isRepeat = false;
+            for (int j = 0; j <skills[abilityScore].length; j++ )
+            {
+                if (skills[abilityScore][j].equalsIgnoreCase(newSkill[i]))
+                {
+                    isRepeat = true;
+                    repeat++;
+                }
+            }
+            if (!isRepeat) {
+                skills[abilityScore][skillIndex[abilityScore]] = newSkill[i];
+                skillIndex[abilityScore]++;
+            }
+        }
+        return repeat;
+    }
+
+    private String[] expertise =//Expertise is related to skills, but since they will be tied, we don't need to section it by the ability sccores
             {
                     "", "", "", "", "", "", ""
             };
@@ -181,7 +258,7 @@ public class Proficiency {
         return output;
     }
 
-    public boolean isExpertise (String skillName)
+    public boolean isExpertise (String skillName)//returns true if the string is found in the expertise list
     {
         for (int i = 0; i < expertiseIndex; i ++)
         {
@@ -193,86 +270,14 @@ public class Proficiency {
         return false;
     }
 
-    public void addExpertise(String skillName)
+    public void addExpertise(String skillName)//adds a string to the list
     {
         expertise[expertiseIndex] = skillName;
         expertiseIndex ++;
     }
 
 
-    private String skills[][] = {
-            {""},
-            {"", "", ""},
-            {},
-            {"", "", "", "", ""},
-            {"", "", "", "", ""},
-            {"", "", "", ""}
-    };
-
-    private int skillIndex[] = {0, 0, 0, 0, 0, 0};
-    public void resetSkills()
-    {
-        Arrays.fill(skills, "");
-    }
-    public String[][] getSkills() {
-        return skills;
-    }
-    public String[] skillsOneDArray()
-    {
-        String[] skillReturn = new String[18];
-        int skillReturnIndex = 0;
-        for (int j = 0; j < skills.length; j++) {
-            for (int i = 0; i < skills[j].length; i++) {
-                if (!skills[j][i].isEmpty()) {
-                    skillReturn[skillReturnIndex] = skills[j][i];
-                    System.out.println(skillReturn[skillReturnIndex]);
-                    skillReturnIndex++;
-                }
-            }
-        }
-
-        String[] realReturn = new String [skillReturnIndex];
-        ArrayFunctions.copyArray(realReturn, skillReturn);
-        return realReturn;
-
-    }
-
-    public String getSkillsToString()
-    {
-        String returnString = "";
-        for (int j = 0; j < skills.length; j++) {
-            for (int i = 0; i < skills[j].length; i++) {
-                if (!skills[j][i].isEmpty()) {
-                    returnString = returnString + skills[j][i] + " ";
-                }
-            }
-        }
-        return returnString;
-    }
-    public int addSkill(int abilityScore, String... newSkill)
-    {
-        int repeat = 0;
-        for (int i = 0; i<newSkill.length; i++)
-        {
-            boolean isRepeat = false;
-            for (int j = 0; j <skills[abilityScore].length; j++ )
-            {
-                if (skills[abilityScore][j].equalsIgnoreCase(newSkill[i]))
-                {
-                    isRepeat = true;
-                    repeat++;
-                }
-            }
-            if (!isRepeat) {
-                skills[abilityScore][skillIndex[abilityScore]] = newSkill[i];
-                skillIndex[abilityScore]++;
-            }
-        }
-        return repeat;
-    }
-
-
-    public static int countMultArray(String[][] array)
+    public static int countMultArray(String[][] array)//returns the number of terms in a 2d array
     {
         int terms = 0;
         for (int i = 0; i<array.length; i++)

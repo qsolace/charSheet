@@ -1,7 +1,9 @@
+//The Barbarian is one of the three "class" classes. It has Rage bonus, a unique feature, as well as a secondary
+//Armor Class determination method.
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
-
+//mostly the same as the fighter. I'll mark any differences
 public class Barbarian extends JFrame{
 
     Barbarian(Stats stat, String ancestry)
@@ -15,37 +17,29 @@ public class Barbarian extends JFrame{
         this.stat = stat;
     }
 
-    //    private int[] stats = {0, 0, 0, 0, 0, 0};
-//    public int[] assignedStats = {0, 0, 0, 0, 0, 0};//{Str, Dex, Con, Int, Wis, Cha}
-//    private int[] statModifiers = {0, 0, 0, 0, 0, 0};
     public Stats stat;
     public Features features = new Features();
 
     private String[] statNames = {"Strength", "Dexterity", "Constitution", "Intelligence", "Wisdom", "Charisma"};
-    private int[] proficientSave = {0, 2};
+    private int[] proficientSave = {0, 2};//different saving throws
     private int[] saveBonus = {0, 0, 0, 0, 0, 0};
     private int hitPoints = 0;
     private int level = 1;
     private int profBonus = 2;
-    private int hitDie = 12;
+    private int hitDie = 12;//different hit dice
     private int bonusHP = 0;
     private int skillNumber = 2;
     private String ancestry;
-    private int rageBonus = 2;
+    private int rageBonus = 2;//rage bonus is used when adding weapons
     private boolean shieldEquip = false;
     private boolean isMedium = true;
-    private int rageUses = 2;
+    private int rageUses = 2;//rage uses is used when adding the "rage" feature.
 
     private String equippedArmor = "";
     private int armorClass = 10;
 
 
     private Proficiency proficiency = new Proficiency();
-
-
-    private boolean strFighter;
-    private boolean isEKnight = false;
-
     private Inventory inventory = new Inventory();
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -86,10 +80,9 @@ public class Barbarian extends JFrame{
 
 
     public void fileOutput() throws IOException {
-//        File output = new File("C:\\Users\\ryan_\\OneDrive\\Desktop\\Greenhill-DESKTOP-7HM548H\\10th Grade\\AP Comp Sci\\" + Character.seedString.stripTrailing() + ".txt");
-//        FileWriter print = new FileWriter(output);
+
         Writer print = new StringWriter();
-        print.write("Name: " + Character.seedString.stripTrailing() + "        " + ancestry + " Barbarian " + level + "\n\n");
+        print.write("Name: " + Character.seedString.stripTrailing() + "        " + ancestry + " Barbarian " + level + "\n\n");//different class name
         print.write("AC: " + armorClass + "         HP: " + (hitPoints +bonusHP)+ "       Speed: " + features.getSpeed() + "ft\n\n");
         for (int i = 0; i < stat.modifier.length; i++) {
             print.write(statNames[i] + ": " + stat.scores[i] + "(");
@@ -190,13 +183,13 @@ public class Barbarian extends JFrame{
                     bonusSign = '-';
                 }
                 print.write(outputString);
-                print.write("  |  Rage Bonus: " + rageBonus);
+                print.write("  |  Rage Bonus: " + rageBonus);//adds rage bonus if it is a strength weapon
 
                 if (!Weapons.versatile(inventory.getWeapons()[i]).equalsIgnoreCase("Not Versatile")) {
 
                     print.write("\n" + inventory.getWeapons()[i] + "(two-handed) " + attackSign + attackBonus + " " + Weapons.versatile(inventory.getWeapons()[i]) +
                             bonusSign + damageBonus + " " + Weapons.damageType(inventory.getWeapons()[i]));
-                    print.write("  |  Rage Bonus: " + rageBonus);
+                    print.write("  |  Rage Bonus: " + rageBonus);//adds rage bonus if it is a strength weapon
                 }
 
 
@@ -290,7 +283,7 @@ public class Barbarian extends JFrame{
 
         JFrame frame = new JFrame();
         frame.setSize(new Dimension(300, 300));
-        JFileChooser jFileChooser = new JFileChooser();
+        JFileChooser jFileChooser = new JFileChooser("C:");
         jFileChooser.setDialogTitle("Where do you want to save " + Character.seedString.stripTrailing() + "?");
         jFileChooser.showSaveDialog(frame);
 
@@ -323,12 +316,12 @@ public class Barbarian extends JFrame{
 
 
 
-        assignedStats[0] = stats[5];
-        assignedStats[1] = stats[3];
+        assignedStats[0] = stats[5];//strength as highest stat
+        assignedStats[1] = stats[3];//dex as third highest
         assignedStats[2] = stats[4];//Assign Con as second highest stat.
 
 
-        switch (Character.rand.nextInt(6)) {//the worst thing I've ever done. This will look better later
+        switch (Character.rand.nextInt(6)) {//the worst thing I've ever done. Assign mental stats
             case 0:
                 assignedStats[3] = stats[3];
                 assignedStats[4] = stats[0];
@@ -372,27 +365,17 @@ public class Barbarian extends JFrame{
         ancestry = decideAncestry(ancestry);
         stat.createModifiers();
 
-//        skillIndex = concatenateArray(skills, skillIndex, decideSkills(2));
-//        armorIndex = concatenateArray(armor, armorIndex, assignArmorProf());
-//        weaponIndex = concatenateArray(weapons, weaponIndex, assignWeaponProf());
-//
-//        for (int i = 0; i <weaponIndex; i ++)
-//        {
-//            System.out.println(weapons[i]);
-//        }
-
         decideSkills(2);
         proficiency.addWeapon(assignWeaponProf());
         proficiency.addArmor(assignArmorProf());
-        armorClass = stat.modifier[1] + stat.modifier[2] + 10;
+        armorClass = stat.modifier[1] + stat.modifier[2] + 10;//AC is determined with: 10 + Dex bonus + Con bonus; no armor is added
 
         hitPoints = hitDie + stat.modifier[2];
 
 
-        boolean shieldMartial = Character.rand.nextBoolean();
         int weaponAmount = 1;
         String[] weaponOptions;
-        if (isMedium)
+        if (isMedium)//chooses weapons based on size.
         {
             weaponOptions = new String[]{"Greataxe", "Greatsword", "Maul"};
         }
@@ -400,7 +383,6 @@ public class Barbarian extends JFrame{
         {
             weaponOptions = new String[]{"Longsword", "Battleaxe", "Warhammer"};
         }
-        System.out.println("TEST:"+ weaponOptions[2]);
         String weaponChoice = "";
         for (int i = 0; i < weaponAmount; i++) {
             weaponChoice = weaponOptions[Character.rand.nextInt(weaponOptions.length)];
@@ -409,8 +391,9 @@ public class Barbarian extends JFrame{
 
 
 
-        inventory.addExplorersPack();
-        inventory.addWeapon("Handaxe", "Handaxe","Javelin", "Javelin", "Javelin", "Javelin");
+        inventory.addExplorersPack();//add pack: there is no choice
+        inventory.addWeapon("Handaxe", "Handaxe","Javelin", "Javelin", "Javelin", "Javelin");//adds weapons to inventory: there is no choice
+        //add feature descriptions
         features.addFeature("Rage", "In battle, you fight with primal ferocity. On your turn, you can enter a rage as a bonus action.\n" +
                 "\n" +
                 "While raging, you gain the following benefits if you aren’t wearing heavy armor:\n" +
@@ -439,7 +422,7 @@ public class Barbarian extends JFrame{
             int ancestryChance[] = {3, 3, 2, 2, 2, 1, 1};
             String ancestryName[] = {"Mountain Dwarf", "Hill Dwarf", "Human", "High Elf", "Wood Elf", "Lightfoot Halfling", "Stout Halfling"};
             //mountain dwarf, hill dwarf, human, high elf, wood elf, lightfoot halfling, stout halfling
-
+            //there aren't really any modifications to be made...
 
 
             int totalWeight = 0;
@@ -496,7 +479,7 @@ public class Barbarian extends JFrame{
 
     }
 
-    public void decideSkills(int numberOfSkills) {
+    public void decideSkills(int numberOfSkills) {//new skill list!
         String[][] skillList = {
                 {"Athletics"},
                 {},
@@ -523,7 +506,7 @@ public class Barbarian extends JFrame{
             }
         }
     }
-
+//proficiency assignments.
     private String[] assignArmorProf() {
         String armorList[] = {"Leather", "Studded Leather", "Padded", "Hide", "Breastplate", "Chain Shirt", "Half Plate", "Scale Mail", "Spiked Armor", "Shield"};
 
@@ -539,10 +522,6 @@ public class Barbarian extends JFrame{
         return weaponList;
     }
 
-
-//----------------------------------------------------------------------------------------------------------------------
-//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Ability Fun Times<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-//----------------------------------------------------------------------------------------------------------------------
 
 
 }

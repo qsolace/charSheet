@@ -1,3 +1,6 @@
+//The Fighter is one of the three "class" classes. It has unique features such as primary stat determination, weapon
+//selection, and Fighting Style determination.
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Random;
@@ -5,27 +8,20 @@ import java.io.*;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-
+//this is one of 3 classes included in thsi build.
 public class Fighter extends JFrame{
 
     Fighter (Stats stat, String ancestry)
     {
         this.ancestry= ancestry;
         this.stat = stat;
-    }
+    }//this is the constructor for this clas. It requires the stat list and the ancestry. If an ancestry is blank, it'll generate one.
 
-    Fighter (Stats stat)
-    {
-        this.stat = stat;
-    }
 
-    //    private int[] stats = {0, 0, 0, 0, 0, 0};
-//    public int[] assignedStats = {0, 0, 0, 0, 0, 0};//{Str, Dex, Con, Int, Wis, Cha}
-//    private int[] statModifiers = {0, 0, 0, 0, 0, 0};
     public Stats stat;
     public Features features = new Features();
 
-    private String[] statNames = {"Strength", "Dexterity", "Constitution", "Intelligence", "Wisdom", "Charisma"};
+    private String[] statNames = {"Strength", "Dexterity", "Constitution", "Intelligence", "Wisdom", "Charisma"};//various declarations
     private int[] proficientSave = {0, 2};
     private int[] saveBonus = {0, 0, 0, 0, 0, 0};
     private int hitPoints = 0;
@@ -65,7 +61,7 @@ public class Fighter extends JFrame{
 //----------------------------------------------------------------------------------------------------------------------
 
 
-    public String getSkills() {
+    public String getSkills() {//various get statements
         return proficiency.getSkillsToString();
     }
 
@@ -87,13 +83,11 @@ public class Fighter extends JFrame{
     }
 
 
-    public void fileOutput() throws IOException {
-//        File output = new File("C:\\Users\\ryan_\\OneDrive\\Desktop\\Greenhill-DESKTOP-7HM548H\\10th Grade\\AP Comp Sci\\" + Character.seedString.stripTrailing() + ".txt");
-//        FileWriter print = new FileWriter(output);
-        Writer print = new StringWriter();
-        print.write("Name: " + Character.seedString.stripTrailing() + "        " + ancestry + " Fighter " + level + "\n\n");
-        print.write("AC: " + armorClass + "         HP: " + (hitPoints +bonusHP)+ "       Speed: " + features.getSpeed() + "ft\n\n");
-        for (int i = 0; i < stat.modifier.length; i++) {
+    public void fileOutput() throws IOException {//this whole thing prints the class to a .txt file
+        Writer print = new StringWriter();//this puts everything into a String.
+        print.write("Name: " + Character.seedString.stripTrailing() + "        " + ancestry + " Fighter " + level + "\n\n");//adds name, ancestry, class, and level
+        print.write("AC: " + armorClass + "         HP: " + (hitPoints +bonusHP)+ "       Speed: " + features.getSpeed() + "ft\n\n");//adds Armor Class, hitpoints, and speed
+        for (int i = 0; i < stat.modifier.length; i++) {//adds names of Ability Score names, statistics, and modifiers
             print.write(statNames[i] + ": " + stat.scores[i] + "(");
             if (stat.modifier[i] >= 0) {
                 print.write("+");
@@ -104,7 +98,7 @@ public class Fighter extends JFrame{
             }
         }
 
-        print.write("\n-------------------\nSaving Throws:\n\n");
+        print.write("\n-------------------\nSaving Throws:\n\n");//adds proficient saves
         for (int i = 0; i < saveBonus.length; i++) {
             if (i == proficientSave[0] || i == proficientSave[1]) {
                 print.write(statNames[i] + " Saving Throw: ");
@@ -115,7 +109,7 @@ public class Fighter extends JFrame{
             }
         }
 
-        print.write("-------------------\nSkills:\n\n");
+        print.write("-------------------\nSkills:\n\n");//adds proficient skills
         for (int i = 0; i < proficiency.getSkills().length; i++) {
             for (int j = 0; j < proficiency.getSkills()[i].length; j++) {
                 if (!proficiency.getSkills()[i][j].isEmpty()) {
@@ -129,8 +123,8 @@ public class Fighter extends JFrame{
             }
         }
 
-        print.write("-------------------\nWeapons:\n\n");
-        for (int i = 0; i < inventory.getWeapons().length; i++) {
+        print.write("-------------------\nWeapons:\n\n");//shows all the weapons with their damage and traits
+        for (int i = 0; i < inventory.getWeapons().length; i++) {//does this for every weapon in inventory
             if (!inventory.getWeapons()[i].isEmpty()) {
                 String outputString = "";
                 int attackBonus = 0;
@@ -188,7 +182,7 @@ public class Fighter extends JFrame{
                     }
 
                     if (Weapons.isMelee(inventory.getWeapons()[i]) && !Weapons.isTwoHanded(inventory.getWeapons()[i]) && fightingStyle == 3) {
-                        damageBonus += 2;
+                        damageBonus += 2;//apply Dueling FS
                     }
                     outputString += (damageBonus + " " + Weapons.damageType(inventory.getWeapons()[i]));//damage type
                 }
@@ -198,14 +192,14 @@ public class Fighter extends JFrame{
                 }
                 print.write(outputString);
 
-                if (!Weapons.versatile(inventory.getWeapons()[i]).equalsIgnoreCase("Not Versatile")) {
+                if (!Weapons.versatile(inventory.getWeapons()[i]).equalsIgnoreCase("Not Versatile")) {//adds versatile damage.
 
                     print.write("\n" + inventory.getWeapons()[i] + "(two-handed) " + attackSign + attackBonus + " " + Weapons.versatile(inventory.getWeapons()[i]) +
                             bonusSign + damageBonus + " " + Weapons.damageType(inventory.getWeapons()[i]));
                 }
 
                 outputString = Weapons.thrown(inventory.getWeapons()[i]) + Weapons.ranged(inventory.getWeapons()[i]);
-                if (!outputString.isEmpty()) {
+                if (!outputString.isEmpty()) {//adds traits to the weapon listing
                     print.write("  |  " + outputString);
                 }
                 if (Weapons.isLight(inventory.getWeapons()[i])) {
@@ -219,14 +213,14 @@ public class Fighter extends JFrame{
 
         }
         print.write("\n\n\n");
-        print.write(features.getFeatures());
+        print.write(features.getFeatures());//prints all the features from the "Features" class
 
         print.write("\n\n\nEquipped Armor:\n" + equippedArmor);
         if (shieldEquip) {
             print.write(", Shield\n");
         }
 
-        print.write("\n\n\n\nINVENTORY:\n");
+        print.write("\n\n\n\nINVENTORY:\n");//shows everything in the inventory
         print.write("   Weapons:\n      " + inventory.getWeaponsToString());
         print.write("\n   Armor:\n      " + inventory.getArmorToString());
         print.write("\n   Tools:\n      " + inventory.getToolsToString());
@@ -236,7 +230,7 @@ public class Fighter extends JFrame{
 
 
         print.write("\n\n\n\n\n" +
-                "Weapon Proficiencies:\n");
+                "Weapon Proficiencies:\n");//shows all the weapon proficiencies
         for (int i = 0; i < proficiency.getWeapons().length; i++) {
             if (!proficiency.getWeapons()[i].isEmpty()) {
                 if (i > 0) {
@@ -252,7 +246,7 @@ public class Fighter extends JFrame{
         }
 
         print.write("\n\n-------------------\n" +
-                "Armor Proficiencies:\n");
+                "Armor Proficiencies:\n");//shows all the armor proficiencies
         for (int i = 0; i < proficiency.getArmor().length; i++) {
             if (!proficiency.getArmor()[i].isEmpty()) {
                 if (i > 0) {
@@ -267,7 +261,7 @@ public class Fighter extends JFrame{
             }
         }
         print.write("\n\n-------------------\n" +
-                "Tool Proficiencies:\n");
+                "Tool Proficiencies:\n");//all the tool proficiencies
         for (int i = 0; i < proficiency.getTools().length; i++) {
             if (!proficiency.getTools()[i].isEmpty()) {
                 if (i > 0) {
@@ -288,13 +282,13 @@ public class Fighter extends JFrame{
         JScrollPane scrollPane = new JScrollPane(label);
         scrollPane.setPreferredSize( new Dimension( 900, 700) );
         JOptionPane.showMessageDialog(null, scrollPane, Character.seedString.stripTrailing(), JOptionPane.PLAIN_MESSAGE);
-
+        //displays the character and prompts the user to say ok
 
         JFrame frame = new JFrame();
         frame.setSize(new Dimension(300, 300));
-        JFileChooser jFileChooser = new JFileChooser("C:\\Users\\ryan_\\OneDrive\\Desktop\\Greenhill-DESKTOP-7HM548H\\10th Grade\\AP Comp Sci");
+        JFileChooser jFileChooser = new JFileChooser("C:");
         jFileChooser.setDialogTitle("Where do you want to save " + Character.seedString.stripTrailing() + "?");
-        jFileChooser.showSaveDialog(frame);
+        jFileChooser.showSaveDialog(frame);//file save dialog for where to save the character file
 
         String path = "";
         try {
@@ -303,9 +297,9 @@ public class Fighter extends JFrame{
         catch (java.lang.NullPointerException e)
         {
             System.exit(0);
-        }
+        }//makes sure the file is okay
 
-        File outputFile = new File (path+".txt");
+        File outputFile = new File (path+".txt");//add that file
         FileWriter outputWrite = new FileWriter(outputFile);
         outputWrite.write(print.toString());
         outputWrite.close();
@@ -384,37 +378,27 @@ public class Fighter extends JFrame{
     }
 
 
-    public void createFirstLevel() throws IOException {
+    public void createFirstLevel() throws IOException {//this is what runs when the class is selected.
 
-        assignStats();
-        ancestry = decideAncestry(ancestry);
-        stat.createModifiers();
+        assignStats();//this assigns the stats in an optimal manner, specific to the class.
+        ancestry = decideAncestry(ancestry);//if an ancestry isn't given, this decides it.
+        stat.createModifiers();//since ancestries change statistics, the modifiers need to be updated
 
-//        skillIndex = concatenateArray(skills, skillIndex, decideSkills(2));
-//        armorIndex = concatenateArray(armor, armorIndex, assignArmorProf());
-//        weaponIndex = concatenateArray(weapons, weaponIndex, assignWeaponProf());
-//
-//        for (int i = 0; i <weaponIndex; i ++)
-//        {
-//            System.out.println(weapons[i]);
-//        }
 
-        System.out.println(isEKnight);
-        decideSkills(2);
-        proficiency.addWeapon(assignWeaponProf());
+
+        decideSkills(skillNumber);//this determines which skill the fighter will have
+        proficiency.addWeapon(assignWeaponProf());//this adds both the weapon and armor proficiencies to the "Proficiency" class
         proficiency.addArmor(assignArmorProf());
 
 
-        hitPoints = hitDie + stat.modifier[2];
-        if (strFighter) {
+        hitPoints = hitDie + stat.modifier[2];//This determines the hitpoints: it's the max of the hit die, plus the Constitution modifier (the 3rd score)
+        if (strFighter) {//this determines equipment based on which ability score is dominant.
             equippedArmor = "Chain Mail";
             armorClass = 16;
         } else {
             equippedArmor = "Leather Armor";
             armorClass = 11 + stat.modifier[1];
-
             inventory.addWeapon("Longbow");
-//            weaponInventoryIndex
         }
 
         if (strFighter) {
@@ -424,10 +408,11 @@ public class Fighter extends JFrame{
             inventory.addMisc("20 bolts");
         }
 
-        boolean shieldMartial = Character.rand.nextBoolean();
+        boolean shieldMartial = Character.rand.nextBoolean();//this randomly determines whether the character uses a shield or not.
         int weaponAmount = 1;
         String[] weaponOptions;
-        if (!strFighter) {
+
+        if (!strFighter) {//this determines which weapons get chosed, based on whether a shield is taken and what ability score is dominant.
             if (shieldMartial) {
                 weaponOptions = Weapons.oneHandedWeapon(Weapons.martialDex());
                 inventory.addArmor("Shield");
@@ -448,13 +433,15 @@ public class Fighter extends JFrame{
                 weaponAmount = 2;
             }
         }
+
+
         String weaponChoice = "";
-        for (int i = 0; i < weaponAmount; i++) {
+        for (int i = 0; i < weaponAmount; i++) {//this chooses those weapons and adds them to the Inventory class
             weaponChoice = weaponOptions[Character.rand.nextInt(weaponOptions.length)];
             inventory.addWeapon(weaponChoice);
         }
 
-        if (Character.rand.nextBoolean())
+        if (Character.rand.nextBoolean())//this randomly chooses what miscellaneous items are chosen.
         {
             inventory.addDungeonerPack();
         }
@@ -462,25 +449,24 @@ public class Fighter extends JFrame{
         {
             inventory.addExplorersPack();
         }
-        fightingStyleDetermination(weaponChoice);
+        fightingStyleDetermination(weaponChoice);//this determines the optimal Fighting Style based on what weapons have been chosen.
         features.addFeature("Second Wind", "You have a limited well of stamina that you can draw on to protect yourself from harm. " +
                 "On your turn, you can use a bonus action to regain hit points equal to 1d10 + your fighter level. " +
-                "Once you use this feature, you must finish a short or long rest before you can use it again.");
+                "Once you use this feature, you must finish a short or long rest before you can use it again.");//this adds a feature to the Features class
 
-        inventory.addArmor(equippedArmor);
-        stat.addSaveProficiency(proficientSave);
-        fileOutput();
+        inventory.addArmor(equippedArmor);//this adds the armor to the inventory
+        stat.addSaveProficiency(proficientSave);//and this adds the save proficiencies (which are declared at the very top of the program)
+        fileOutput();//finally, this prints all of this information as a .txt file
     }
 
 
-    private String decideAncestry(String userAncestry) {
+    private String decideAncestry(String userAncestry) {//this decides the ancestry
         String ancestry = userAncestry;
-        if (ancestry.isEmpty()) {
+        if (ancestry.isEmpty()) {//if the user inputs an ancestry, this is skipped
             int[] stats = stat.scores;
             int ancestryChance[] = {2, 2, 1, 1, 1, 1, 1};
             String ancestryName[] = {"Mountain Dwarf", "Hill Dwarf", "Human", "High Elf", "Wood Elf", "Lightfoot Halfling", "Stout Halfling"};
-            //mountain dwarf, hill dwarf, human, high elf, wood elf, lightfoot halfling, stout halfling
-            if (strFighter) {
+            if (strFighter) {//this chooses based on whether the ability score is odd and what type of fighter it is
                 ancestryChance[0] += 4;
                 ancestryChance[1] += 2;
 
@@ -519,28 +505,28 @@ public class Fighter extends JFrame{
 
 
             int totalWeight = 0;
-            for (int i = 0; i < ancestryChance.length; i++) {
+            for (int i = 0; i < ancestryChance.length; i++) {//this determines the total weight of all of the ancestries
                 totalWeight += ancestryChance[i];
             }
 
-            int decidedNumber = Character.rand.nextInt(totalWeight) + 1;
+            int decidedNumber = Character.rand.nextInt(totalWeight) + 1;//this randomizes it
 
             int ancestryNumber = -1;
             while (decidedNumber > 0) {
                 ancestryNumber++;
-                decidedNumber -= ancestryChance[ancestryNumber];
+                decidedNumber -= ancestryChance[ancestryNumber];//and this selects it
             }
 
             ancestry = ancestryName[ancestryNumber];
             System.out.println(ancestry);
         }
 
-        if (ancestry.compareToIgnoreCase("human") == 0) {
+        if (ancestry.compareToIgnoreCase("human") == 0) {//then, this area applies that ancestry's traits, by going off into different classes
             Human.applyAncestry(stat, proficiency, features);
         }
         else if (ancestry.equalsIgnoreCase("Hill Dwarf"))
         {
-            bonusHP++;
+            bonusHP++;//since the Hill Dwarf gets extra hitpoints per level, this reflects that
             Dwarf.applyAncestry("Hill Dwarf", stat, proficiency, features);
         }
         else if (ancestry.equalsIgnoreCase("Mountain Dwarf"))
@@ -570,17 +556,17 @@ public class Fighter extends JFrame{
 
     }
 
-    public void decideSkills(int numberOfSkills) {
-        String[][] skillList = {
+    public void decideSkills(int numberOfSkills) {//this determines what skills are assigned
+        String[][] skillList = {//all skills are tied to a certain ability score. This multidimensional array pairs each skill with its respective score
                 {"Athletics"},
                 {"Acrobatics"},
                 {},
                 {"History"},
-                {"Animal Handling", "Insight", "Perception", "Survival"},
-                {"Intimidation"}
+                {"Animal Handling", "Insight", "Perception", "Survival"},//ie: all of these are Wisdom skills, so they are grouped together
+                {"Intimidation"}//whereas this is a Charisma skill, so it is separate.
         };
 
-        for (int j = 0; j < numberOfSkills; j++) {
+        for (int j = 0; j < numberOfSkills; j++) {//this randomizes the skill
             int skillNumber = Character.rand.nextInt(Proficiency.countMultArray(skillList));
 
             for (int i = 0; i < skillList.length; i++) {
@@ -588,7 +574,7 @@ public class Fighter extends JFrame{
                     int rerun = proficiency.addSkill(i, skillList[i][skillNumber]);
                     System.out.println(rerun);
                     if (rerun > 0) {
-                        decideSkills(rerun);
+                        decideSkills(rerun);//if the same skill is selected, this recalls this function, until a unique skill is selected
                     }
                     break;
                 } else {
@@ -598,14 +584,14 @@ public class Fighter extends JFrame{
         }
     }
 
-    private String[] assignArmorProf() {
+    private String[] assignArmorProf() {//this list of armors is added to the proficiency class
         String armorList[] = {"Leather", "Studded Leather", "Padded", "Hide", "Breastplate", "Chain Shirt", "Half Plate", "Ring Mail", "Scale Mail", "Spiked Armor", "Chain Mail", "Splint", "Plate", "Shield"};
 
         proficiency.addArmor(armorList);
         return armorList;
     }
 
-    private String[] assignWeaponProf() {
+    private String[] assignWeaponProf() {//same for the weapons here
         String weaponList[] = {"Club", "Dagger", "Greatclub", "Handaxe", "Javelin", "Light Hammer", "Mace", "Quarterstaff", "Sickle", "Spear", "Light Crossbow", "Dart", "Shortbow", "Sling", "Battleaxe", "Flail", "Glaive",
                 "Greataxe", "Greatsword", "Halberd", "Lance", "Longsword", "Maul", "Morningstar", "Pike", "Rapier", "Scimitar", "Shortsword", "Trident", "War Pick", "Warhammer", "Whip", "Blowgun", "Hand Crossbow", "Heavy Crossbow",
                 "Longbow", "Net"};
@@ -617,12 +603,13 @@ public class Fighter extends JFrame{
 //----------------------------------------------------------------------------------------------------------------------
 //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Ability Fun Times<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 //----------------------------------------------------------------------------------------------------------------------
-    private int fightingStyleDetermination (String weapon)
+    private int fightingStyleDetermination (String weapon)//this determines the Fighting Styles, based on what type of weapon is inputted.
     {
-        int[] FSChance = {2, 0, 0, 0, 0, 0};
+        int[] FSChance = {2, 0, 0, 0, 0, 0};//this array holds a list of the fighting styles, which have been given a number. Since defense (Fighting Style number 2)
+        //will always be applicable, it is automatically added
         int FSIndex = 1;
 
-        if (Weapons.isMelee(weapon))
+        if (Weapons.isMelee(weapon))//all of this is based on one weapon, as that ensures that it will be applicable to at least one weapon, rather than random.
         {
             if (Weapons.isTwoHanded(weapon)) {
                 FSChance[FSIndex] = 4;
@@ -649,13 +636,13 @@ public class Fighter extends JFrame{
             FSIndex++;
         }
 
-        fightingStyle = FSChance[Character.rand.nextInt(FSIndex)];
+        fightingStyle = FSChance[Character.rand.nextInt(FSIndex)];//this randomizes which Fighting Style is selected, using only the ones that have been added
         if (fightingStyle == 2)
         {
             armorClass+=1;
         }
 
-        switch (fightingStyle){
+        switch (fightingStyle){//this adds the description to the "Features" class
             case 1:
                 features.addFeature("Fighting Style: Archery", "You gain a +2 bonus to attack rolls you make with ranged weapons.");
                 break;
@@ -677,7 +664,7 @@ public class Fighter extends JFrame{
                 features.addFeature("Fighting Style: Two-Weapon Fighting", "When you engage in two-weapon fighting, you can add your ability modifier to the damage of the second attack.");
         }
 
-        return fightingStyle;
+        return fightingStyle;//this returns the number of the Fighting Style
 
     }
 

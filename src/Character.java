@@ -1,9 +1,13 @@
-import java.awt.*;
+//This is the Main Class (TM). It has all the fun things. The user prompts at the begining? That's here.
+//Tonnes of fun names? That's here. Class selection? Still here. It then splits off into the Fighter, Barbarian, and
+//Rogue classes.
+
+
 import java.io.IOException;
 import java.util.Random;
 import java.util.Scanner;
 import javax.swing.*;
-
+//this is the main running class for this program. It calls all the other classes and prompts the user for inputs.
 public class Character {
 
 
@@ -15,7 +19,8 @@ public class Character {
     private static String userClass = "";
     private static Stats stats = new Stats();
     private static boolean needStats = true;
-    private static String[] nameList =
+    private static String[] nameList =//this is a list of fun names if the user does not enter one. All of them are stolen from the fantastic show
+            //Critical Role, which you should definitely watch. youtube.com/criticalrole  It's really nice. Especially now a days... with a global pandemic...
     {
         "Lord Percival Fredrickstein von Musel Klossowski de Rolo III of Whitestone",
         "Vax'ildan Vessar",
@@ -32,7 +37,7 @@ public class Character {
         "Jester Lavorre",
         "Caleb Widogast",
         "Beauregard Lionette",
-        "Fjord Stone",
+        "Fjord Stone",//It's a bunch of car puns...
         "Fjord Tough",
         "Fjord Flex",
         "Fjord Mustang",
@@ -66,48 +71,39 @@ public class Character {
     };
 
     public static void main(String[] args) throws IOException {
-        JOptionPane jOptionPane = new JOptionPane();
-
-
-
 
         JTextField characterName = new JTextField();
         JCheckBox randomizeAll = new JCheckBox();
         Object[] message = {
-                "Character Name: ", characterName,
+                "Character Name: ", characterName,//this determines what the user needs to input
                 "Randomize Ancestry, Class, and Stats: ", randomizeAll
         };
 
+        JOptionPane.showMessageDialog(null, message, "Welcome to DnD5e Character Creator!", 1);//this shows the first screen that the user sees
 
-
-
-
-
-        JOptionPane.showMessageDialog(null, message, "Welcome to DnD5e Character Creator!", 1);
-
-        System.out.println(characterName.getText().length());
         seedString = characterName.getText();
         if (characterName.getText().isEmpty())
         {
-            seedString = nameList[rand.nextInt(nameList.length)];
+            seedString = nameList[rand.nextInt(nameList.length)];//if you don't enter a name, this chooses one for you
         }
 
-        System.out.println(seedString);
-        System.out.println(randomizeAll.isSelected());
-        int[] statTemp = new int[6];
 
-        if (!randomizeAll.isSelected()) {
+        int[] statTemp = new int[6];
+        //do you really have to read through all this? It seems rather time consuming...
+
+
+        if (!randomizeAll.isSelected()) {//there was a tick box in the first window that allowed the user to choose if they wanted to select stuff. If they wanted to, this happens:
 
             String[] ancestryChoices = {"", "Human", "High Elf", "Wood Elf", "Hill Dwarf", "Mountain Dwarf", "Lightfoot Halfling", "Stout Halfling"};
-            userAncestry = (String) JOptionPane.showInputDialog(null, "Choose your ancestry:",
+            userAncestry = (String) JOptionPane.showInputDialog(null, "Choose your ancestry:",//the user gets a popup asking them to choose their ancestry
                     seedString+"'s Ancestry Selection", JOptionPane.QUESTION_MESSAGE, null, ancestryChoices, ancestryChoices[0]);
 
-            String[] classChoices = {"", "Barbarian", "Fighter", "Rogue"};
+            String[] classChoices = {"", "Barbarian", "Fighter", "Rogue"};//another popup to choose their class
             userClass = (String) JOptionPane.showInputDialog(null, "Choose your class:",
                     seedString+"'s Class Selection", JOptionPane.QUESTION_MESSAGE, null, classChoices, classChoices[0]);
 
 
-            JTextField[] statInput = new JTextField[6];
+            JTextField[] statInput = new JTextField[6];//a final popup to choose their stats
             for (int i = 0; i <statInput.length; i++)
             {
                 statInput[i] = new JTextField();
@@ -124,7 +120,7 @@ public class Character {
             JOptionPane.showMessageDialog(null, inputStats, "Stat Selection", 1);
             needStats = false;
 
-            for (int i = 0; i < statInput.length; i++)
+            for (int i = 0; i < statInput.length; i++)//if they don't put in integers, this detects that and generates them for the user.
             {
                 try
                 {
@@ -132,7 +128,6 @@ public class Character {
                 }
                 catch (NumberFormatException e)
                 {
-                    System.out.println("FAIL!");
                     needStats = true;
                     break;
                 }
@@ -146,8 +141,9 @@ public class Character {
         {
             seed += (int)seedString.charAt(i);
         }
-        rand.setSeed(seed);
-        if (needStats) {
+        rand.setSeed(seed);//this turns the name into a seed, meaning that if you put the same name in multiple times, you get the same character
+
+        if (needStats) {//if stats need to be generated (whether because they weren't generated or were incorrectly inputted) this generates the stats via the "stats" class
             stats.generate();
         }
         else
@@ -156,14 +152,13 @@ public class Character {
         }
 
 
-//        JOptionPane.showMessageDialog(null, "java is fun", "Title", 1);
-        String classAssessment = userClass;
+        String classAssessment = userClass;//assigns to the user's input
         while (!(classAssessment.equalsIgnoreCase("fighter")||classAssessment.equalsIgnoreCase("rogue")||classAssessment.equalsIgnoreCase("barbarian")))
-        {
+        {//if the user didn't input anything, it comes here, where the program decides.
             classAssessment = classAssess(stats.scores);
         }
 
-        switch (classAssessment.toUpperCase())
+        switch (classAssessment.toUpperCase())//if it fits one of these, it creates that class and creates the first level.
         {
             case "FIGHTER":
                 Fighter fighter = new Fighter(stats, userAncestry);
@@ -186,13 +181,13 @@ public class Character {
 
     }
 
-    private static String classAssess (int[] statArray)
+    private static String classAssess (int[] statArray)//this is what determines a class if the user doesn't decide
     {
         int goodAmount = 0;
         int highAmount = 0;
         int lowAmount = 0;
 
-        for (int i = 0; i <6; i++)
+        for (int i = 0; i <6; i++)//this determines the frequency for different tiers of stats.
         {
             if (statArray[i] >=15)
             {
@@ -207,10 +202,12 @@ public class Character {
                 lowAmount +=1;
             }
         }//Bard - 0, Barbarian- 1, Cleric -2 , Druid 3, Fighter 4, Monk 5, Paladin 6, Ranger 7, Rogue 8, Warlock 9, Sorcerer 10, Wizard 11
+
+        //you'll notice that I have more classes here than are able to be generated; when I update it, these will be included
         int[] classWeight = {0,1,1,0,1,1,2,0,1,0,0,1};
         String[] className = {"Bard", "Barbarian", "Cleric", "Druid", "Fighter", "Monk", "Paladin", "Ranger", "Rogue", "Warlock", "Sorcerer", "Wizard"};
 
-        if (lowAmount<=1)
+        if (lowAmount<=1)//assigns a weight based on the frequency of stat tiers.
         {
             classWeight[0] += 3;//increase Bard chances based on versatility.
         }
@@ -289,26 +286,23 @@ public class Character {
 
 
         int totalWeight = 0;
-        for (int i = 0; i < classWeight.length; i ++)
+        for (int i = 0; i < classWeight.length; i ++)//determines the total weight of all the classes
         {
             totalWeight+=classWeight[i];
         }
 
-        int decidedNumber = Character.rand.nextInt(totalWeight)+1;
+        int decidedNumber = Character.rand.nextInt(totalWeight)+1;//randomizes which class it will be
 
         int classnumber = -1;
         while (decidedNumber > 0)
         {
             classnumber++;
-            decidedNumber -= classWeight[classnumber];
+            decidedNumber -= classWeight[classnumber];//finds that class
         }
 
 
-//        System.out.println("\nHigh Stats: " + highAmount);
-//        System.out.println("Good Stats: " + goodAmount);
-//        System.out.println("Low Stats: " + lowAmount);
 
-        return className[classnumber];
+        return className[classnumber];//outputs the name of that class
     }
 
 

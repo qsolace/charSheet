@@ -1,5 +1,4 @@
-import java.util.Random;
-
+//This class handles all of the base statistics and modifiers for the game. It generates them and provides them when other classes need them
 
 public class Stats {
     public int[] scores = {0, 0, 0, 0, 0, 0};
@@ -28,13 +27,13 @@ public class Stats {
 
     public void setScores(int[] scores) {
         this.scores = scores;
-        createModifiers();
+        createModifiers();//this sets the scores for the statistics. This is used if the user enters them
     }
 
     public int[] getScores() {
-        return scores;
+        return scores;//this returns the array with the scores.
     }
-    public String getScoresToString ()
+    public String getScoresToString ()//this gets the scores in a string. It was only really used for testing
     {
         String output = "";
         for (int i = 0; i < scores.length; i++)
@@ -44,10 +43,10 @@ public class Stats {
         return output;
     }
 
-    public int[] getMods() {
+    public int[] getMods() {//this gets the statistic modifiers as an array
         return modifier;
     }
-    public String getModsToString ()
+    public String getModsToString ()//this gets the mods as a string, again, only used for testing
     {
         String output = "";
         for (int i = 0; i < modifier.length; i++)
@@ -57,10 +56,10 @@ public class Stats {
         return output;
     }
 
-    public int[] getSaves() {
+    public int[] getSaves() {//this gets the saves as an array
         return saves;
     }
-    public String getSavesToString ()
+    public String getSavesToString ()//gets the save modifiers as a string
     {
         String output = "";
         for (int i = 0; i < saves.length; i++)
@@ -70,7 +69,7 @@ public class Stats {
         return output;
     }
 
-    public void sortScores ()
+    public void sortScores ()//this sorts the scores from the largest to the smallest.
     {
         int length = scores.length;//sorts the array into order
         for (int i =0; i < length; i++)
@@ -87,7 +86,8 @@ public class Stats {
         }
     }
 
-    public void createModifiers ()
+    public void createModifiers ()//this converts the statistics into the modifiers. This is achieved by subtracting 10 from the score, dividing by 2 and
+            //rounding down.
     {
         for (int i = 0; i < modifier.length; i ++)
         {
@@ -95,7 +95,8 @@ public class Stats {
         }
         ArrayFunctions.copyArray(saves, modifier);
     }
-    public void addSaveProficiency (int... proficiencyLocation)
+    public void addSaveProficiency (int... proficiencyLocation)//This will add a number to the save modifier if a character is proficient by that save,
+            //determined by the class.
     {
 
         for (int i = 0; i < proficiencyLocation.length; i++)
