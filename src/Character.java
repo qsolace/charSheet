@@ -98,7 +98,7 @@ public class Character {
             userAncestry = (String) JOptionPane.showInputDialog(null, "Choose your ancestry:",//the user gets a popup asking them to choose their ancestry
                     seedString+"'s Ancestry Selection", JOptionPane.QUESTION_MESSAGE, null, ancestryChoices, ancestryChoices[0]);
 
-            String[] classChoices = {"", "Barbarian", "Bard", "Cleric", "Druid", "Fighter", "Rogue"};//another popup to choose their class
+            String[] classChoices = {"", "Barbarian", "Bard", "Cleric", "Druid", "Fighter", "Monk", "Rogue"};//another popup to choose their class
             userClass = (String) JOptionPane.showInputDialog(null, "Choose your class:",
                     seedString+"'s Class Selection", JOptionPane.QUESTION_MESSAGE, null, classChoices, classChoices[0]);
 
@@ -153,7 +153,7 @@ public class Character {
 
 
         String classAssessment = userClass;//assigns to the user's input
-        while (!(classAssessment.matches("Fighter|Rogue|Barbarian|Bard|Cleric|Druid")))
+        while (!(classAssessment.matches("Fighter|Rogue|Barbarian|Bard|Cleric|Druid|Monk")))
         {//if the user didn't input anything, it comes here, where the program decides.
             classAssessment = classAssess(stats.scores);
         }
@@ -184,6 +184,10 @@ public class Character {
             case "DRUID":
                 Druid druid = new Druid(stats, userAncestry);
                 druid.createFirstLevel();
+                break;
+            case "MONK":
+                Monk monk = new Monk(stats, userAncestry);
+                monk.createFirstLevel();
                 break;
         }
 

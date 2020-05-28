@@ -423,6 +423,7 @@ public class Druid {
 
         proficiency.addWeapon(assignWeaponProf());
         proficiency.addArmor(assignArmorProf());
+        assignToolProf();
 
         hitPoints = hitDie + stat.modifier[2];
 

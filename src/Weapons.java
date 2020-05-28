@@ -309,6 +309,18 @@ public class Weapons {
         return out;
     }
 
+    public static boolean isSimpleMelee(String weaponName)
+    {
+        for (int i = 0; i < weaponList[0].length; i++)
+        {
+            if (weaponName.equalsIgnoreCase(weaponList[0][i][0]))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static String[] oneHandedWeapon (String... weapon)//checks to see if a weapon can be weilded in one hand (if it doesn't have the "two-handed" tag
     {
         String[] tempOutput = new String[weapon.length];
