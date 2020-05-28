@@ -177,7 +177,6 @@ public class Rogue {//the majority of Rogue is the same as fighter. I'll mark th
                     outputString += ("+");
                     attackSign = '+';
                 }
-                System.out.println(attackBonus);
 
                 outputString += (attackBonus + "  " + Weapons.damage(inventory.getWeapons()[i]));//print damage die
 
@@ -193,8 +192,6 @@ public class Rogue {//the majority of Rogue is the same as fighter. I'll mark th
                         bonusSign = '+';
                     }
                     damageBonus = stat.modifier[1];//adding damage modifier
-                    System.out.println("MOD:" +stat.modifier[1]);
-                    System.out.println("BONUS: " + damageBonus);
                 }
 
                 outputString += (damageBonus + " " + Weapons.damageType(inventory.getWeapons()[i]));//damage type
@@ -385,7 +382,6 @@ public class Rogue {//the majority of Rogue is the same as fighter. I'll mark th
         Backgrounds.addBackground(background, proficiency, inventory, features);
 
         decideSkills(skillNumber);
-        System.out.println(proficiency.getSkillsToString());
 
         proficiency.addWeapon(assignWeaponProf());
         proficiency.addArmor(assignArmorProf());
@@ -428,7 +424,6 @@ public class Rogue {//the majority of Rogue is the same as fighter. I'll mark th
         int randomization = -1;
         for (int i = 0; i < 2; i++) {//chooses two out of all proficienct skills and thieves' tools to add expertise to
             int tempInt = Character.rand.nextInt(skillsT.length + 1);
-            System.out.println(tempInt + " " + randomization);
             if (tempInt!=randomization) {
                 randomization = tempInt;
                 if (randomization == skillsT.length) {
@@ -560,7 +555,6 @@ public class Rogue {//the majority of Rogue is the same as fighter. I'll mark th
                 if (skillList[i].length > skillNumber) {
                     int rerun = proficiency.addSkill(i, skillList[i][skillNumber]);
 
-                    System.out.println(skillList[i][skillNumber]);
                     if (rerun > 0) {
                         decideSkills(rerun);
                     }

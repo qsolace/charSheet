@@ -69,7 +69,6 @@ public class Proficiency {
         String returnString = "";
         for (int i = 0; i < armor.length; i++)
         {
-
             returnString = returnString + armor[i] + " ";
         }
         return returnString;
@@ -106,6 +105,7 @@ public class Proficiency {
     }
 
     private String language[] = {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""};
+    private String[] normalLanguages = {"Dwarvish", "Elvish", "Giant", "Gnomish", "Goblin", "Halfling", "Orc"};
     private int languageIndex =0;//same as weapons
 
     public String[] getLanguage() {
@@ -116,7 +116,14 @@ public class Proficiency {
         String returnString = "";
         for (int i = 0; i < languageIndex; i++)
         {
+            if (language[i].equalsIgnoreCase("choice"))
+            {
+                boolean newLanguage = false;
+                do {
+                    newLanguage = specificAddLanguage(normalLanguages[Character.rand.nextInt(normalLanguages.length)], i);
 
+                }while(!newLanguage);
+            }
             returnString += language[i] + breakString;
         }
         return returnString.substring(0, returnString.length()-breakString.length());
@@ -138,6 +145,19 @@ public class Proficiency {
                 languageIndex++;
             }
         }
+    }
+
+    public boolean specificAddLanguage (String languageAddition, int location)
+    {
+        for (int i = 0; i < language.length; i++)
+        {
+            if (languageAddition.equalsIgnoreCase(language[i]))
+            {
+                return false;
+            }
+        }
+        language[location] = languageAddition;
+        return true;
     }
 
 
