@@ -11,7 +11,7 @@ public class Elf {
     private static String weapons[] = {"Longsword", "Shortsword", "Shortbow", "Longbow"};
 
 
-    public static void applyAncestry(String subclass, Stats stats, Proficiency proficiency, Features features)
+    public static void applyAncestry(String subclass, Stats stats, Proficiency proficiency, Features features, Spells... spells)
     {
         if (subclass.equalsIgnoreCase("High Elf"))
         {
@@ -21,8 +21,13 @@ public class Elf {
 
             String[] wizardCantrip = {"Booming Blade", "Control Flames", "Friends", "Green-Flame Blade", "Gust", "Mage Hand", "Mending", "Message", "Minor Illusion", "Mold Earth",
             "Prestidigitation", "True Strike"};//list of possible cantrups
-            features.addFeature("Cantrip", "You know the cantrip \"" + wizardCantrip[Character.rand.nextInt(wizardCantrip.length)]+"\" " +
+            String cantripName = wizardCantrip[Character.rand.nextInt(wizardCantrip.length)];
+            features.addFeature("Cantrip", "You know the cantrip \"" + cantripName+"\" " +
                     "from the Wizard spell list. Intelligence is your spellcasting ability for it.");//randomly chooses one of the above cantrips to be added
+            if (spells.length == 1)
+            {
+                spells[0].addCantrip(cantripName + "—Intelligence");
+            }
         }
         else if(subclass.equalsIgnoreCase("Wood Elf"))
         {

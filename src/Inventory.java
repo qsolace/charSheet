@@ -1,6 +1,7 @@
 //This stores all the items that a character has. It's nothing super fancy. Just more arrays and functions.
 
 public class Inventory {
+    private String priestsPackContents[] = {"Backpack", "Blanket", "10 Candles", "Tinderbox", "Alms Box", "2 Blocks of Incense", "Censer", "Vestments", "2 days of rations", "Waterskin"};
     private String dungeonerPackContents[] = {"Backpack", "Crowbar", "Hammer", "10 Pitons", "10 Torches", "Tinderbox", "10 days of rations", "Waterskin", "50 feet of hempen rope"};
     private String explorersPackContents[] = {"Backpack", "Bedroll", "Mess kit", "Tinderbox", "10 torches", "10 days of rations", "Waterskin", "50 feet of hempen rope"};
     private String burglarsPackContents[] = {"Backpack", "Bag of 1000 ball bearings", "10 feet of string", "Bell", "5 candles", "Crowbar", "hammer", "10 pitons", "Hooded Lantern",
@@ -160,4 +161,6 @@ public class Inventory {
     public void addExplorersPack(){addMisc(explorersPackContents);}
 
     public void addBurglarsPack(){addMisc(burglarsPackContents);}
+
+    public void addPriestsPack(){addMisc(priestsPackContents);}
 }

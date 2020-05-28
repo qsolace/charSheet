@@ -118,7 +118,13 @@ public class Fighter extends JFrame{
                     if (bonus >= 0) {
                         print.write("+");
                     }
-                    print.write(bonus + "\n");
+                    print.write(bonus+"");
+
+                    if (proficiency.getSkills()[i][j].equalsIgnoreCase("Stealth")&&equippedArmor.matches("Ring Mail|Chain Mail|Splint|Plate"))
+                    {
+                        print.write(" (disadvantage)");
+                    }
+                    print.write("\n");
                 }
             }
         }

@@ -93,6 +93,18 @@ public class Proficiency {
         }
     }
 
+    public boolean isProficientArmor (String armorName)//returns whether or not the inputted string is in the proficiency list
+    {
+        for (int i = 0; i < armor.length; i++)
+        {
+            if (armorName.equalsIgnoreCase(armor[i]))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private String language[] = {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""};
     private int languageIndex =0;//same as weapons
 
@@ -233,6 +245,19 @@ public class Proficiency {
             }
         }
         return repeat;
+    }
+
+    public boolean isSkill (String skillName)
+    {
+        String[] skillList = skillsOneDArray();
+        for (int i = 0; i < skillsOneDArray().length; i++)
+        {
+            if (skillName.equalsIgnoreCase(skillList[i]))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     private String[] expertise =//Expertise is related to skills, but since they will be tied, we don't need to section it by the ability sccores
