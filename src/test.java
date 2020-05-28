@@ -2,19 +2,20 @@ public class test {
     public static void main (String args[])
     {
 
-        for (int i = 0; i<10; i++)
-        {
+//        for (int i = 0; i<10; i++)
+
             Spells spells = new Spells();
             Stats stats = new Stats();
             int[] score = {10, 10, 10, 10, 10, 10};
             stats.setScores(score);
             Proficiency proficiency = new Proficiency();
             Features features = new Features();
+            Inventory inventory = new Inventory();
 
-            Elf.applyAncestry("High Elf", stats, proficiency, features, spells);
-            spells.addCantrip("Mending");
-            System.out.println(spells.getCantipsToString(", "));
-        }
+            Backgrounds.addBackground("Acolyte", proficiency, inventory);
+
+        System.out.println(inventory.getMiscToString());
+        System.out.println(inventory.getMoneyToString(", "));
 
 //        String testString = "Face—Intelligence";
 //        int indexOfChar = testString.indexOf("—");

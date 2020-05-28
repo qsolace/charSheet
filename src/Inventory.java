@@ -153,6 +153,46 @@ public class Inventory {
         }
     }
 
+    public String[] moneyNames = {"Copper Pieces", "Silver Pieces", "Electrum Pieces", "Gold Pieces", "Platinum Pieces"};
+    private int[] moneyValues = {0,0,0,0,0};
+
+    public void addMoney (int amount, int... type){
+        int location = 3;
+        if (type.length==1)
+        {
+            location = type[0];
+        }
+
+        moneyValues[location] += amount;
+    }
+
+    public int getMoney (int... location)
+    {
+        if (location.length==1)
+        {
+            return moneyValues[location[0]];
+        }
+        return moneyValues[3];
+    }
+
+    public int[] getMoneyValues ()
+    {
+        return moneyValues;
+    }
+
+    public String getMoneyToString (String breakString)
+    {
+        String returnString = "";
+        for (int i = 0; i < moneyValues.length; i++)
+        {
+            if (moneyValues[i]>0)
+            {
+                returnString += moneyNames[i] + ": " + moneyValues[i];
+            }
+        }
+        return returnString;
+    }
+
 
     public void addDungeonerPack()//just adds the Packs from the top to misc
     {

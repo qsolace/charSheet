@@ -128,7 +128,7 @@ public class Proficiency {
             boolean isRepeat = false;
             for (int j = 0; j <language.length; j++ )
             {
-                if (language[j].equalsIgnoreCase(newLanguage[i]))
+                if (language[j].equalsIgnoreCase(newLanguage[i])&&!language[j].equalsIgnoreCase("choice"))
                 {
                     isRepeat = true;
                 }
