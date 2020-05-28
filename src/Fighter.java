@@ -32,6 +32,7 @@ public class Fighter extends JFrame{
     private int skillNumber = 2;
     private String ancestry;
     private int fightingStyle;
+    private String background;
 
     private String equippedArmor = "";
     private int armorClass = 10;
@@ -79,13 +80,13 @@ public class Fighter extends JFrame{
     }
 
     public String getLanguages() {
-        return proficiency.getLanguageToString();
+        return proficiency.getLanguageToString(" ");
     }
 
 
     public void fileOutput() throws IOException {//this whole thing prints the class to a .txt file
         Writer print = new StringWriter();//this puts everything into a String.
-        print.write("Name: " + Character.seedString.stripTrailing() + "        " + ancestry + " Fighter " + level + "\n\n");//adds name, ancestry, class, and level
+        print.write("Name: " + Character.seedString.stripTrailing() + "        " + ancestry + " Fighter " + level + "        Background: "+background+"\n\n");//adds name, ancestry, class, and level
         print.write("AC: " + armorClass + "         HP: " + (hitPoints +bonusHP)+ "       Speed: " + features.getSpeed() + "ft\n\n");//adds Armor Class, hitpoints, and speed
         for (int i = 0; i < stat.modifier.length; i++) {//adds names of Ability Score names, statistics, and modifiers
             print.write(statNames[i] + ": " + stat.scores[i] + "(");
@@ -231,8 +232,7 @@ public class Fighter extends JFrame{
         print.write("\n   Armor:\n      " + inventory.getArmorToString());
         print.write("\n   Tools:\n      " + inventory.getToolsToString());
         print.write("\n   Other:\n      " + inventory.getMiscToString());
-
-
+        print.write("\n\n   "+inventory.getMoneyToString("\n   "));
 
 
         print.write("\n\n\n\n\n" +
@@ -281,6 +281,8 @@ public class Fighter extends JFrame{
                 }
             }
         }
+        print.write("\n\n-------------------\n" +
+                "Languages:\n"+proficiency.getLanguageToString(", "));
 
         print.close();
         JTextArea label = new JTextArea(print.toString());
@@ -390,7 +392,8 @@ public class Fighter extends JFrame{
         ancestry = decideAncestry(ancestry);//if an ancestry isn't given, this decides it.
         stat.createModifiers();//since ancestries change statistics, the modifiers need to be updated
 
-
+        background = decideBackground();
+        Backgrounds.addBackground(background, proficiency, inventory, features);
 
         decideSkills(skillNumber);//this determines which skill the fighter will have
         proficiency.addWeapon(assignWeaponProf());//this adds both the weapon and armor proficiencies to the "Proficiency" class
@@ -458,14 +461,34 @@ public class Fighter extends JFrame{
         fightingStyleDetermination(weaponChoice);//this determines the optimal Fighting Style based on what weapons have been chosen.
         features.addFeature("Second Wind", "You have a limited well of stamina that you can draw on to protect yourself from harm. " +
                 "On your turn, you can use a bonus action to regain hit points equal to 1d10 + your fighter level. " +
-                "Once you use this feature, you must finish a short or long rest before you can use it again.");//this adds a feature to the Features class
+                "Once you use this feature, you must finish a short or long rest before you can use it again.", 1);//this adds a feature to the Features class
 
         inventory.addArmor(equippedArmor);//this adds the armor to the inventory
         stat.addSaveProficiency(proficientSave);//and this adds the save proficiencies (which are declared at the very top of the program)
         fileOutput();//finally, this prints all of this information as a .txt file
     }
 
+    private String decideBackground()
+    {
+        String[] backgroundOptions = {"Acolyte", "Criminal", "Folk Hero", "Noble", "Sage", "Soldier"};
+        int[] backgroundChance = {4, 5, 8, 7, 3, 15};
 
+        int totalWeight = 0;
+        for (int i = 0; i < backgroundChance.length; i++) {
+            totalWeight += backgroundChance[i];
+        }
+        int decidedNumber = Character.rand.nextInt(totalWeight) + 1;
+
+        int backgroundNumber = -1;
+        while (decidedNumber > 0) {
+            backgroundNumber++;
+            decidedNumber -= backgroundChance[backgroundNumber];
+        }
+
+        return backgroundOptions[backgroundNumber];
+
+
+    }
     private String decideAncestry(String userAncestry) {//this decides the ancestry
         String ancestry = userAncestry;
         if (ancestry.isEmpty()) {//if the user inputs an ancestry, this is skipped

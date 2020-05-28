@@ -12,7 +12,7 @@ public class test {
             Features features = new Features();
             Inventory inventory = new Inventory();
 
-            Backgrounds.addBackground("Acolyte", proficiency, inventory);
+            Backgrounds.addBackground("Acolyte", proficiency, inventory, features);
 
         System.out.println(inventory.getMiscToString());
         System.out.println(inventory.getMoneyToString(", "));

@@ -111,15 +111,15 @@ public class Proficiency {
     public String[] getLanguage() {
         return language;
     }
-    public String getLanguageToString()
+    public String getLanguageToString(String breakString)
     {
         String returnString = "";
-        for (int i = 0; i < language.length; i++)
+        for (int i = 0; i < languageIndex; i++)
         {
 
-            returnString = returnString + language[i] + " ";
+            returnString += language[i] + breakString;
         }
-        return returnString;
+        return returnString.substring(0, returnString.length()-breakString.length());
     }
     public void addLanguage(String... newLanguage)
     {

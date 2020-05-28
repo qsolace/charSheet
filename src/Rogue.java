@@ -19,6 +19,7 @@ public class Rogue {//the majority of Rogue is the same as fighter. I'll mark th
     private int bonusHP = 0;
     private int skillNumber = 4;//has more skills
     private String ancestry;
+    private String background;
 
     private String equippedArmor = "";
     private int armorClass = 10;
@@ -72,13 +73,13 @@ public class Rogue {//the majority of Rogue is the same as fighter. I'll mark th
     }
 
     public String getLanguages() {
-        return proficiency.getLanguageToString();
+        return proficiency.getLanguageToString(" ");
     }
 
 
     public void fileOutput() throws IOException{
         Writer print = new StringWriter();
-        print.write("Name: " + Character.seedString.stripTrailing() + "        " + ancestry + " Rogue " + level + "\n\n");//changed class name
+        print.write("Name: " + Character.seedString.stripTrailing() + "        " + ancestry + " Rogue " + level + "        Background: "+background+"\n\n");//changed class name
         print.write("AC: " + armorClass + "         HP: " + (hitPoints +bonusHP)+ "       Speed: " + features.getSpeed() + "ft\n\n");
         for (int i = 0; i < stat.modifier.length; i++) {
             print.write(statNames[i] + ": " + stat.scores[i] + "(");
@@ -233,9 +234,7 @@ public class Rogue {//the majority of Rogue is the same as fighter. I'll mark th
         print.write("\n   Armor:\n      " + inventory.getArmorToString());
         print.write("\n   Tools:\n      " + inventory.getToolsToString());
         print.write("\n   Other:\n      " + inventory.getMiscToString());
-
-
-
+        print.write("\n\n   "+inventory.getMoneyToString("\n   "));
 
         print.write("\n\n\n\n\n\n\n\n" +
                 "Weapon Proficiencies:\n");
@@ -283,6 +282,10 @@ public class Rogue {//the majority of Rogue is the same as fighter. I'll mark th
                 }
             }
         }
+
+        print.write("\n\n-------------------\n" +
+                "Languages:\n"+proficiency.getLanguageToString(", "));
+
 
         print.close();
 
@@ -378,6 +381,8 @@ public class Rogue {//the majority of Rogue is the same as fighter. I'll mark th
         ancestry = decideAncestry();
         stat.createModifiers();
 
+        background = decideBackground();
+        Backgrounds.addBackground(background, proficiency, inventory, features);
 
         decideSkills(skillNumber);
         System.out.println(proficiency.getSkillsToString());
@@ -457,7 +462,27 @@ public class Rogue {//the majority of Rogue is the same as fighter. I'll mark th
         stat.addSaveProficiency(proficientSave);
         fileOutput();
     }
+    private String decideBackground()
+    {
+        String[] backgroundOptions = {"Acolyte", "Criminal", "Folk Hero", "Noble", "Sage", "Soldier"};
+        int[] backgroundChance = {2, 10, 5, 1, 3, 6};
 
+        int totalWeight = 0;
+        for (int i = 0; i < backgroundChance.length; i++) {
+            totalWeight += backgroundChance[i];
+        }
+        int decidedNumber = Character.rand.nextInt(totalWeight) + 1;
+
+        int backgroundNumber = -1;
+        while (decidedNumber > 0) {
+            backgroundNumber++;
+            decidedNumber -= backgroundChance[backgroundNumber];
+        }
+
+        return backgroundOptions[backgroundNumber];
+
+
+    }
 
     private String decideAncestry() {
         int[] stats = stat.scores;

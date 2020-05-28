@@ -1,7 +1,8 @@
 //This stores all the features that a character has. They can be added in anywhere in the program, then they get printed
 //out all together, super easily.
 public class Features {
-    private String[][] features = new String[10][2];
+    private String[][] features = new String[20][2];
+    private int[] featureUses = new int[20];
     private int featureIndex = 0;
     private int darkvisionRange = 0;
     private int speed = 0;
@@ -27,10 +28,14 @@ public class Features {
         return darkvisionRange;
     }
 
-    public void addFeature(String title, String description)
+    public void addFeature(String title, String description, int... uses)
     {
         features[featureIndex][0] = title;
         features[featureIndex][1] = description;
+        if (uses.length==1)
+        {
+            featureUses[featureIndex]= uses[0];
+        }
         featureIndex++;//adds a feature to teh feature array
     }
 
@@ -44,8 +49,17 @@ public class Features {
             {
                 break;
             }
-            output += features[i][0] +"\n";
-            output += features[i][1] + "\n-------------------\n";
+            output += features[i][0];
+            if (featureUses[i]!=0)
+            {
+                output += " (  ";
+                for (int k = 1; k < featureUses[i]; k++)
+                {
+                    output += "|  ";
+                }
+                output += ")";
+            }
+            output += "\n"+features[i][1] + "\n-------------------\n";
         }
         return output;
     }

@@ -30,6 +30,7 @@ public class Barbarian extends JFrame{
     private int bonusHP = 0;
     private int skillNumber = 2;
     private String ancestry;
+    private String background;
     private int rageBonus = 2;//rage bonus is used when adding weapons
     private boolean shieldEquip = false;
     private boolean isMedium = true;
@@ -75,14 +76,14 @@ public class Barbarian extends JFrame{
     }
 
     public String getLanguages() {
-        return proficiency.getLanguageToString();
+        return proficiency.getLanguageToString(" ");
     }
 
 
     public void fileOutput() throws IOException {
 
         Writer print = new StringWriter();
-        print.write("Name: " + Character.seedString.stripTrailing() + "        " + ancestry + " Barbarian " + level + "\n\n");//different class name
+        print.write("Name: " + Character.seedString.stripTrailing() + "        " + ancestry + " Barbarian " + level + "        Background: "+background+"\n\n");//different class name
         print.write("AC: " + armorClass + "         HP: " + (hitPoints +bonusHP)+ "       Speed: " + features.getSpeed() + "ft\n\n");
         for (int i = 0; i < stat.modifier.length; i++) {
             print.write(statNames[i] + ": " + stat.scores[i] + "(");
@@ -228,7 +229,7 @@ public class Barbarian extends JFrame{
         print.write("\n   Armor:\n      " + inventory.getArmorToString());
         print.write("\n   Tools:\n      " + inventory.getToolsToString());
         print.write("\n   Other:\n      " + inventory.getMiscToString());
-
+        print.write("\n\n   "+inventory.getMoneyToString("\n   "));
 
 
 
@@ -278,6 +279,8 @@ public class Barbarian extends JFrame{
                 }
             }
         }
+        print.write("\n\n-------------------\n" +
+                "Languages:\n"+proficiency.getLanguageToString(", "));
 
         print.close();
         JTextArea label = new JTextArea(print.toString());
@@ -371,6 +374,9 @@ public class Barbarian extends JFrame{
         ancestry = decideAncestry(ancestry);
         stat.createModifiers();
 
+        background = decideBackground();
+        Backgrounds.addBackground(background, proficiency, inventory, features);
+
         decideSkills(2);
         proficiency.addWeapon(assignWeaponProf());
         proficiency.addArmor(assignArmorProf());
@@ -411,7 +417,7 @@ public class Barbarian extends JFrame{
                 "\n" +
                 "Your rage lasts for 1 minute. It ends early if you are knocked unconscious or if your turn ends and you haven’t attacked a hostile creature since your last turn or taken damage since then. You can also end your rage on your turn as a bonus action.\n" +
                 "\n" +
-                "Once you have raged "+rageUses+" times, you must finish a long rest before you can rage again.");
+                "Once you have raged "+rageUses+" times, you must finish a long rest before you can rage again.", rageUses);
 
         features.addFeature("Unarmored Defense", "While you are not wearing any armor, your Armor Class equals 10 + your Dexterity modifier + your Constitution modifier. You can use a shield and still gain this benefit.");
 
@@ -420,7 +426,27 @@ public class Barbarian extends JFrame{
         fileOutput();
     }
 
+    private String decideBackground()
+    {
+        String[] backgroundOptions = {"Acolyte", "Criminal", "Folk Hero", "Noble", "Sage", "Soldier"};
+        int[] backgroundChance = {3, 7, 7, 3, 5, 6};
 
+        int totalWeight = 0;
+        for (int i = 0; i < backgroundChance.length; i++) {
+            totalWeight += backgroundChance[i];
+        }
+        int decidedNumber = Character.rand.nextInt(totalWeight) + 1;
+
+        int backgroundNumber = -1;
+        while (decidedNumber > 0) {
+            backgroundNumber++;
+            decidedNumber -= backgroundChance[backgroundNumber];
+        }
+
+        return backgroundOptions[backgroundNumber];
+
+
+    }
     private String decideAncestry(String userAncestry) {
         String ancestry = userAncestry;
         if (ancestry.isEmpty()) {

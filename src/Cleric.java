@@ -18,6 +18,7 @@ public class Cleric {
     private String domain;
     private Spells clericSpells = new Spells();
     private String[] domainSpells = new String[10];
+    private String background;
 
     private String equippedArmor = "";
     private int armorClass = 10;
@@ -72,7 +73,7 @@ public class Cleric {
     }
 
     public String getLanguages() {
-        return proficiency.getLanguageToString();
+        return proficiency.getLanguageToString(" ");
     }
 
 
@@ -80,7 +81,7 @@ public class Cleric {
 
         //CHARACTER SHEET:
         Writer print = new StringWriter();
-        print.write("Name: " + Character.seedString.stripTrailing() + "        " + ancestry + " " + domain+" Cleric " + level + "\n\n");
+        print.write("Name: " + Character.seedString.stripTrailing() + "        " + ancestry + " " + domain+" Cleric " + level + "        Background: "+background+"\n\n");
         print.write("AC: " + armorClass + "         HP: " + (hitPoints +bonusHP)+ "       Speed: " + features.getSpeed() + "ft\n\n");
         for (int i = 0; i < stat.modifier.length; i++) {
             print.write(statNames[i] + ": " + stat.scores[i] + "(");
@@ -234,7 +235,7 @@ public class Cleric {
         print.write("\n   Armor:\n      " + inventory.getArmorToString());
         print.write("\n   Tools:\n      " + inventory.getToolsToString());
         print.write("\n   Other:\n      " + inventory.getMiscToString());
-
+        print.write("\n\n   "+inventory.getMoneyToString("\n   "));
 
 
 
@@ -284,6 +285,8 @@ public class Cleric {
                 }
             }
         }
+        print.write("\n\n-------------------\n" +
+                "Languages:\n"+proficiency.getLanguageToString(", "));
 
         print.close();
 
@@ -404,6 +407,9 @@ public class Cleric {
         ancestry = decideAncestry();
         stat.createModifiers();
 
+        background = decideBackground();
+        Backgrounds.addBackground(background, proficiency, inventory, features);
+
         String[] domainList = {"Life"};
         domain = domainList[Character.rand.nextInt(domainList.length)];
         switch (domain){
@@ -492,6 +498,28 @@ public class Cleric {
         domainSpells[1] = "Cure Wounds";
         features.addFeature("Disciple of Life", "Your healing spells are more effective. Whenever you use a spell of 1st level or " +
                 "higher to restore hit points to a creature, the creature regains additional hit points equal to 2 + the spell’s level.");
+    }
+
+    private String decideBackground()
+    {
+        String[] backgroundOptions = {"Acolyte", "Criminal", "Folk Hero", "Noble", "Sage", "Soldier"};
+        int[] backgroundChance = {10, 1, 4, 4, 6, 2};
+
+        int totalWeight = 0;
+        for (int i = 0; i < backgroundChance.length; i++) {
+            totalWeight += backgroundChance[i];
+        }
+        int decidedNumber = Character.rand.nextInt(totalWeight) + 1;
+
+        int backgroundNumber = -1;
+        while (decidedNumber > 0) {
+            backgroundNumber++;
+            decidedNumber -= backgroundChance[backgroundNumber];
+        }
+
+        return backgroundOptions[backgroundNumber];
+
+
     }
 
     private String decideAncestry() {
