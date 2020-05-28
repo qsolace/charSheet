@@ -1,11 +1,20 @@
 //This stores all the items that a character has. It's nothing super fancy. Just more arrays and functions.
 
 public class Inventory {
-    private String priestsPackContents[] = {"Backpack", "Blanket", "10 Candles", "Tinderbox", "Alms Box", "2 Blocks of Incense", "Censer", "Vestments", "2 days of rations", "Waterskin"};
-    private String dungeonerPackContents[] = {"Backpack", "Crowbar", "Hammer", "10 Pitons", "10 Torches", "Tinderbox", "10 days of rations", "Waterskin", "50 feet of hempen rope"};
-    private String explorersPackContents[] = {"Backpack", "Bedroll", "Mess kit", "Tinderbox", "10 torches", "10 days of rations", "Waterskin", "50 feet of hempen rope"};
-    private String burglarsPackContents[] = {"Backpack", "Bag of 1000 ball bearings", "10 feet of string", "Bell", "5 candles", "Crowbar", "hammer", "10 pitons", "Hooded Lantern",
-    "2 flasks of oil", "5 days of rations", "Tinderbox", "Waterskin", "50 feet of hempen rope"};//pack contents
+    private String priestsPackContents[] = {"Backpack", "Blanket", "10 Candles", "Tinderbox", "Alms Box",
+            "2 Blocks of Incense", "Censer", "Vestments", "2 days of rations", "Waterskin"};
+    private String dungeonerPackContents[] = {"Backpack", "Crowbar", "Hammer", "10 Pitons", "10 Torches",
+            "Tinderbox", "10 days of rations", "Waterskin", "50 feet of hempen rope"};
+    private String diplomatsPackContents[] = {"Chest", "2 Cases for maps and scrolls", "Set of Fine Clothes",
+            "Bottle of Ink", "Ink Pen", "Lamp", "2 Flasks of Oil", "5 Sheets of Paper", "Vial of Perfume",
+            "Sealing Wax", "Soap"};
+    private String entertainersPackContents[] = {"Backpack", "Bedroll", "2 Costumes", "5 Candles", "5 Days of Rations",
+            "Waterskin", "Disguise Kit"};
+    private String explorersPackContents[] = {"Backpack", "Bedroll", "Mess kit", "Tinderbox", "10 torches",
+            "10 days of rations", "Waterskin", "50 feet of hempen rope"};
+    private String burglarsPackContents[] = {"Backpack", "Bag of 1000 ball bearings", "10 feet of string", "Bell",
+            "5 candles", "Crowbar", "hammer", "10 pitons", "Hooded Lantern", "2 flasks of oil", "5 days of rations",
+            "Tinderbox", "Waterskin", "50 feet of hempen rope"};//pack contents
 
 
 
@@ -120,6 +129,8 @@ public class Inventory {
     private String misc[] = {"", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
             "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
             "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+            "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
+            "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "",
             "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""};
     private int miscIndex =0;//really. It's the exact same as weapons
 
@@ -133,7 +144,9 @@ public class Inventory {
         {
 
             returnString = returnString + misc[i];
-            if (misc[i+1].isEmpty())
+            System.out.print(i+1);
+            System.out.println(" "+misc[i+1]);
+            if (misc[i+1].isBlank())
             {
                 break;
             }
@@ -203,4 +216,8 @@ public class Inventory {
     public void addBurglarsPack(){addMisc(burglarsPackContents);}
 
     public void addPriestsPack(){addMisc(priestsPackContents);}
+
+    public void addDiplomatsPack(){addMisc(diplomatsPackContents);}
+
+    public void addEntertainersPack(){addMisc(entertainersPackContents);}
 }

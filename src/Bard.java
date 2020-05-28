@@ -2,23 +2,22 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 
-public class Cleric {
+public class Bard {
     public Stats stat = new Stats();
     public Features features = new Features();
 
     private String[] statNames = {"Strength", "Dexterity", "Constitution", "Intelligence", "Wisdom", "Charisma"};
-    private int[] proficientSave = {4, 5};
+    private int[] proficientSave = {1, 5};
     private int hitPoints = 0;
     private int level = 1;
     private int profBonus =2;
     private int hitDie = 8;
     private int bonusHP = 0;
-    private int skillNumber = 2;
+    private int skillNumber = 3;
     private String ancestry;
-    private String domain;
-    private Spells clericSpells = new Spells();
-    private String[] domainSpells = new String[10];
+    private Spells bardSpells = new Spells();
     private String background;
+    private String instrument;
 
     private String equippedArmor = "";
     private int armorClass = 10;
@@ -31,13 +30,13 @@ public class Cleric {
 
     private Inventory inventory = new Inventory();
 
-    Cleric(Stats stat, String ancestry)
+    Bard(Stats stat, String ancestry)
     {
         this.ancestry= ancestry;
         this.stat = stat;
     }
 
-    Cleric()
+    Bard()
     {}
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -77,11 +76,11 @@ public class Cleric {
     }
 
 
-    public void fileOutput() throws IOException{
+    public void fileOutput() throws IOException {
 
         //CHARACTER SHEET:
         Writer print = new StringWriter();
-        print.write("Name: " + Character.seedString.stripTrailing() + "        " + ancestry + " " + domain+" Cleric " + level + "        Background: "+background+"\n\n");
+        print.write("Name: " + Character.seedString.stripTrailing() + "        " + ancestry + "        Bard " + level + "        Background: "+background+"\n\n");
         print.write("AC: " + armorClass + "         HP: " + (hitPoints +bonusHP)+ "       Speed: " + features.getSpeed() + "ft\n\n");
         for (int i = 0; i < stat.modifier.length; i++) {
             print.write(statNames[i] + ": " + stat.scores[i] + "(");
@@ -292,37 +291,48 @@ public class Cleric {
 
         //SPELL SHEET
         Writer spellPrint = new StringWriter();
-        spellPrint.write("Name: " + Character.seedString + "      Class: Cleric " + level);
-        spellPrint.write("\nSpellcasting Ability Modifier: Wisdom     " + "Spell Attack Bonus: +"+(2+ stat.getMods()[4]));
-        spellPrint.write("\nSpell Save DC: "+(8+profBonus+stat.getMods()[4]));
+        spellPrint.write("Name: " + Character.seedString + "      Class: Bard " + level);
+        spellPrint.write("\nSpellcasting Ability Modifier: Charisma     " + "Spell Attack Bonus: +"+(2+ stat.getMods()[5]));
+        spellPrint.write("\nSpell Save DC: "+(8+profBonus+stat.getMods()[5]));
         spellPrint.write("\n\nCANTRIPS:\n");
-        spellPrint.write(clericSpells.getCantipsToString("\n"));
+        spellPrint.write(bardSpells.getCantipsToString("\n"));
         spellPrint.write("\n\nFIRST LEVEL SPELLS (   |   ):\n");
-        spellPrint.write(clericSpells.getFirstLevelToString("\n"));
+        spellPrint.write(bardSpells.getFirstLevelToString("\n"));
 
         spellPrint.write("\n\n\n\n\nCANTRIPS\n" +
-                "At 1st level, you know three cantrips of your choice from the cleric spell list. You learn additional cleric cantrips of your choice at higher levels, as shown in the Cantrips Known column of the Cleric table.\n" +
+                "You know two cantrips of your choice from the bard spell list. You learn additional bard cantrips " +
+                "of your choice at higher levels, as shown in the Cantrips Known column of the Bard table.\n" +
                 "\n" +
-                "PREPARING AND CASTING SPELLS\n" +
-                "The Cleric table shows how many spell slots you have to cast your cleric spells of 1st level and higher. To cast one of these spells, you must expend a slot of the spell’s level or higher. You regain all expended spell slots when you finish a long rest.\n" +
-                "You prepare the list of cleric spells that are available for you to cast, choosing from the cleric spell list. When you do so, choose a number of cleric spells equal to your Wisdom modifier + your cleric level (minimum of one spell). The spells must be of a level for which you have spell slots.\n" +
-                "For example, if you are a 3rd-level cleric, you have four 1st-level and two 2nd-level spell slots. With a Wisdom of 16, your list of prepared spells can include six spells of 1st or 2nd level, in any combination. If you prepare the 1st-level spell cure wounds, you can cast it using a 1st-level or 2nd-level slot. Casting the spell doesn’t remove it from your list of prepared spells.\n" +
-                "You can change your list of prepared spells when you finish a long rest. Preparing a new list of cleric spells requires time spent in prayer and meditation: at least 1 minute per spell level for each spell on your list.\n" +
+                "SPELL SLOT\n" +
+                "The Bard table shows how many spell slots you have to cast your bard spells of 1st level and " +
+                "higher. To cast one of these spells, you must expend a slot of the spell’s level or higher. You " +
+                "regain all expended spell slots when you finish a long rest.\n" +
+                "For example, if you know the 1st-level spell cure wounds and have a 1st-level and a 2nd-level spell " +
+                "slot available, you can cast cure wounds using either slot.\n" +
+                "\n" +
+                "SPELLS KNOWN OF 1ST LEVEL OR HIGHER\n" +
+                "You know four 1st-level spells of your choice from the bard spell list.\n" +
+                "\n" +
+                "The Spells Known column of the Bard table shows when you learn more bard spells of your choice. Each " +
+                "of these spells must be of a level for which you have spell slots, as shown on the table. For instance, " +
+                "when you reach 3rd level in this class, you can learn one new spell of 1st or 2nd level.\n" +
+                "Additionally, when you gain a level in this class, you can choose one of the bard spells you know and " +
+                "replace it with another spell from the bard spell list, which also must be of a level for which you " +
+                "have spell slots.\n" +
                 "\n" +
                 "SPELLCASTING ABILITY\n" +
-                "Wisdom is your spellcasting ability for your cleric spells. The power of your spells comes from your devotion to your deity. You use your Wisdom whenever a cleric spell refers to your spellcasting ability. In addition, you use your Wisdom modifier when setting the saving throw DC for a cleric spell you cast and when making an attack roll with one.\n" +
-                "Spell save DC = 8 + your proficiency bonus + your Wisdom modifier\n" +
-                "Spell attack modifier = your proficiency bonus + your Wisdom modifier\n" +
+                "Charisma is your spellcasting ability for your bard spells. Your magic comes from the heart and soul " +
+                "you pour into the performance of your music or oration. You use your Charisma whenever a spell refers " +
+                "to your spellcasting ability. In addition, you use your Charisma modifier when setting the saving " +
+                "throw DC for a bard spell you cast and when making an attack roll with one.\n" +
+                "Spell save DC = 8 + your proficiency bonus + your Charisma modifier\n" +
+                "Spell attack modifier = your proficiency bonus + your Charisma modifier\n" +
                 "\n" +
                 "RITUAL CASTING\n" +
-                "You can cast a cleric spell as a ritual if that spell has the ritual tag and you have the spell prepared.\n" +
+                "You can cast any bard spell you know as a ritual if that spell has the ritual tag.\n" +
                 "\n" +
                 "SPELLCASTING FOCUS\n" +
-                "You can use a holy symbol (see the Adventuring Gear section) as a spellcasting focus for your cleric spells.\n" +
-                "\n" +
-                "DOMAIN SPELLS\n" +
-                "Each domain has a list of spells — its domain spells — that you gain at the cleric levels noted in the domain description. Once you gain a domain spell, you always have it prepared, and it doesn’t count against the number of spells you can prepare each day.\n" +
-                "If you have a domain spell that doesn’t appear on the cleric spell list, the spell is nonetheless a cleric spell for you.\nYour domain spells are:\n"+domainSpells[0]+" and "+domainSpells[1]);
+                "You can use a musical instrument (see the Tools section) as a spellcasting focus for your bard spells.");
 
         spellPrint.close();
 
@@ -369,33 +379,53 @@ public class Cleric {
 
 
 
-        assignedStats[4] = stats[5];//Wis highest
+        assignedStats[5] = stats[5];//Cha highest
         if (Character.rand.nextBoolean())
         {
-            assignedStats[0] = stats[3];//Str as 3rd highest and Dex as 2nd lowest
-            assignedStats[1] = stats[1];
+            assignedStats[1] = stats[3];//Con as 2nd highest and Dex as 3rd highest
+            assignedStats[2] = stats[4];
         }
         else{
-            assignedStats[1] = stats[3];//dex as 3rd highest and Str as 2nd lowest
-            assignedStats[0] = stats[1];
+            assignedStats[1] = stats[4];//Dex as 2nd highest and Con as 3rd highest
+            assignedStats[2] = stats[3];
         }
 
 
 
-        assignedStats[2] = stats[4];//Assign Con as second highest stat.
-
-        if (Character.rand.nextBoolean())
-        {
-            assignedStats[3]=stats[2];//Int as 4th highest and cha as lowest
-            assignedStats[5] = stats[0];
-        }
-        else
-        {
-            assignedStats[3]=stats[2];//Cha as 4th highest and Int as lowest
-            assignedStats[5] = stats[0];
+        switch (Character.rand.nextInt(6)) {//the worst thing I've ever done. This will look better later
+            case 0:
+                assignedStats[3] = stats[2];
+                assignedStats[4] = stats[0];
+                assignedStats[0] = stats[1];
+                break;
+            case 1:
+                assignedStats[3] = stats[2];
+                assignedStats[4] = stats[1];
+                assignedStats[0] = stats[0];
+                break;
+            case 2:
+                assignedStats[3] = stats[1];
+                assignedStats[4] = stats[2];
+                assignedStats[0] = stats[0];
+                break;
+            case 3:
+                assignedStats[3] = stats[1];
+                assignedStats[4] = stats[0];
+                assignedStats[0] = stats[2];
+                break;
+            case 4:
+                assignedStats[3] = stats[0];
+                assignedStats[4] = stats[1];
+                assignedStats[0] = stats[2];
+                break;
+            case 5:
+                assignedStats[3] = stats[0];
+                assignedStats[4] = stats[2];
+                assignedStats[0] = stats[1];
+                break;
         }
         stat.setScores(assignedStats);
-        }
+    }
 
 
 
@@ -409,100 +439,74 @@ public class Cleric {
         background = decideBackground();
         Backgrounds.addBackground(background, proficiency, inventory, features);
 
-        String[] domainList = {"Life"};
-        domain = domainList[Character.rand.nextInt(domainList.length)];
-        switch (domain){
-            case "Life":
-                lifeCleric();
-                break;
-        }
 
         decideSkills(skillNumber);
         System.out.println(proficiency.getSkillsToString());
 
         proficiency.addWeapon(assignWeaponProf());
         proficiency.addArmor(assignArmorProf());
+        assignToolProf();
 
         hitPoints = hitDie + stat.modifier[2];
 
-        if (proficiency.isProficientArmor("Chain Mail") && stat.getScores()[0] >= 13)
+
+        equippedArmor = "Leather Armor";
+        armorClass = 11 + stat.getMods()[1];
+
+
+        if (stat.getMods()[0]<=1)
         {
-            equippedArmor = "Chain Mail";
-            armorClass = 16;
-        }
-        else if (stat.getScores()[1]<14)
-        {
-            equippedArmor = "Scale Mail";
-            armorClass = 14 + stat.getMods()[1];
+            inventory.addWeapon("Rapier");
         }
         else
         {
-
-            if(Character.rand.nextBoolean()) {
-                equippedArmor = "Leather Armor";
-                armorClass = 11 + stat.getMods()[1];
+            if (Character.rand.nextBoolean())
+            {
+                inventory.addWeapon("Rapier");
             }
-            else {
-                equippedArmor = "Scale Mail";
-                armorClass = 14 + stat.getMods()[1];
-            }
-
-
-        }
-
-        if (proficiency.isProficientWeapon("Warhammer"))
-        {
-            inventory.addWeapon("Warhammer");
-        }
-        else
-        {
-            inventory.addWeapon("Mace");
-        }
-
-        if (stat.getScores()[0]<14)
-        {
-            inventory.addWeapon("Light Crossbow");
-            inventory.addMisc("20 bolts");
-        }
-        else {
-            if (Character.rand.nextBoolean()) {
-                inventory.addWeapon("Handaxe");
-            }
-            else {
-                inventory.addWeapon("Spear");
+            else
+            {
+                inventory.addWeapon("Longsword");
             }
         }
 
         if (Character.rand.nextBoolean()) {
-            inventory.addExplorersPack();
+            inventory.addDiplomatsPack();
         } else {
             inventory.addPriestsPack();
         }
 
-        inventory.addMisc("Holy Symbol");
-        inventory.addArmor("Shield");
-        armorClass += 2;
+        inventory.addWeapon("Dagger");
+        inventory.addMisc(instrument);
 
-        spellSelection(1+stat.getMods()[4]);
+
+        spellSelection(4);
+        int biUses = stat.modifier[5];
+        if (biUses<1){biUses=1;}
+
+        features.addFeature("Bardic Inspiration", "You can inspire others through stirring words or " +
+                "music. To do so, you use a bonus action on your turn to choose one creature other than yourself " +
+                "within 60 feet of you who can hear you. That creature gains one Bardic Inspiration die, a d6.\n" +
+                "\n" +
+                "Once within the next 10 minutes, the creature can roll the die and add the number rolled to one " +
+                "ability check, attack roll, or saving throw it makes. The creature can wait until after it rolls the " +
+                "d20 before deciding to use the Bardic Inspiration die, but must decide before the DM says whether the " +
+                "roll succeeds or fails. Once the Bardic Inspiration die is rolled, it is lost. A creature can have " +
+                "only one Bardic Inspiration die at a time.\n" +
+                "\n" +
+                "You can use this feature a number of times equal to your Charisma modifier ("+biUses+"). You " +
+                "regain any expended uses when you finish a long rest.", biUses);
 
         inventory.addArmor(equippedArmor);
         stat.addSaveProficiency(proficientSave);
         fileOutput();
     }
-    private void lifeCleric()
-    {
-        proficiency.addArmor("Ring Mail", "Chain Mail", "Splint", "Plate");
-        clericSpells.addFirstLevel("Bless", "Cure Wounds");
-        domainSpells[0] = "Bless";
-        domainSpells[1] = "Cure Wounds";
-        features.addFeature("Disciple of Life", "Your healing spells are more effective. Whenever you use a spell of 1st level or " +
-                "higher to restore hit points to a creature, the creature regains additional hit points equal to 2 + the spell’s level.");
-    }
+
 
     private String decideBackground()
     {
         String[] backgroundOptions = {"Acolyte", "Criminal", "Folk Hero", "Noble", "Sage", "Soldier"};
-        int[] backgroundChance = {10, 1, 4, 4, 6, 2};
+        int[] backgroundChance = {3, 5, 10, 4, 4, 3};
 
         int totalWeight = 0;
         for (int i = 0; i < backgroundChance.length; i++) {
@@ -555,24 +559,24 @@ public class Cleric {
 
             ancestry = ancestryName[ancestryNumber];
         }
-            System.out.println("ANCESTRY!!!!" + ancestry);
+        System.out.println("ANCESTRY!!!!" + ancestry);
 
-            if (ancestry.compareToIgnoreCase("human") == 0) {
-                Human.applyAncestry(stat, proficiency, features);
-            } else if (ancestry.equalsIgnoreCase("Hill Dwarf")) {
-                bonusHP++;
-                Dwarf.applyAncestry("Hill Dwarf", stat, proficiency, features);
-            } else if (ancestry.equalsIgnoreCase("Mountain Dwarf")) {
-                Dwarf.applyAncestry("Mountain Dwarf", stat, proficiency, features);
-            } else if (ancestry.equalsIgnoreCase("Lightfoot Halfling")) {
-                Halfling.applyAncestry("Lightfoot Halfling", stat, proficiency, features);
-            } else if (ancestry.equalsIgnoreCase("Stout Halfling")) {
-                Halfling.applyAncestry("Stout Halfling", stat, proficiency, features);
-            } else if (ancestry.equalsIgnoreCase("High Elf")) {
-                Elf.applyAncestry("High Elf", stat, proficiency, features, clericSpells);
-            } else if (ancestry.equalsIgnoreCase("Wood Elf")) {
-                Elf.applyAncestry("Wood Elf", stat, proficiency, features);
-            }
+        if (ancestry.compareToIgnoreCase("human") == 0) {
+            Human.applyAncestry(stat, proficiency, features);
+        } else if (ancestry.equalsIgnoreCase("Hill Dwarf")) {
+            bonusHP++;
+            Dwarf.applyAncestry("Hill Dwarf", stat, proficiency, features);
+        } else if (ancestry.equalsIgnoreCase("Mountain Dwarf")) {
+            Dwarf.applyAncestry("Mountain Dwarf", stat, proficiency, features);
+        } else if (ancestry.equalsIgnoreCase("Lightfoot Halfling")) {
+            Halfling.applyAncestry("Lightfoot Halfling", stat, proficiency, features);
+        } else if (ancestry.equalsIgnoreCase("Stout Halfling")) {
+            Halfling.applyAncestry("Stout Halfling", stat, proficiency, features);
+        } else if (ancestry.equalsIgnoreCase("High Elf")) {
+            Elf.applyAncestry("High Elf", stat, proficiency, features, bardSpells);
+        } else if (ancestry.equalsIgnoreCase("Wood Elf")) {
+            Elf.applyAncestry("Wood Elf", stat, proficiency, features);
+        }
 
 
 
@@ -584,12 +588,12 @@ public class Cleric {
 
     public void decideSkills(int numberOfSkills) {
         String[][] skillList = {
+                {"Athletics"},
+                {"Stealth", "Sleight of Hand", "Acrobatics"},
                 {},
-                {},
-                {},
-                {"History", "Religion"},
-                {"Insight", "Medicine"},
-                {"Persuasion"}
+                {"Arcana", "History", "Investigation", "Nature", "Religion"},
+                {"Perception", "Animal Handling", "Survival", "Insight", "Medicine"},
+                {"Persuasion", "Deception", "Intimidation", "Performance", "Persuasion", "Deception", "Intimidation", "Performance"}
         };
         System.out.println("THing 1:" + numberOfSkills);
         for (int j = 0; j < numberOfSkills; j++) {
@@ -612,20 +616,28 @@ public class Cleric {
     }
 
     private String[] assignArmorProf() {
-        String armorList[] = {"Leather", "Studded Leather", "Padded", "Hide", "Breastplate", "Chain Shirt", "Half Plate", "Scale Mail", "Spiked Armor", "Shield"};
+        String armorList[] = {"Leather", "Studded Leather", "Padded"};
 
         proficiency.addArmor(armorList);
         return armorList;
     }
 
     private String[] assignWeaponProf() {
-        String weaponList[] = {"Club", "Dagger", "Greatclub", "Handaxe", "Javelin", "Light Hammer", "Mace", "Quarterstaff", "Sickle", "Spear", "Light Crossbow", "Dart", "Shortbow", "Sling"};
+        String weaponList[] = {"Club", "Dagger", "Greatclub", "Handaxe", "Javelin", "Light Hammer", "Mace",
+                "Quarterstaff", "Sickle", "Spear", "Light Crossbow", "Dart", "Shortbow", "Sling", "Hand Crossbow",
+                "Longsword", "Rapier", "Shortsword"};
         proficiency.addWeapon(weaponList);
         return weaponList;
     }
     private String[] assignToolProf(){
-        String toolList[] = {};
-        proficiency.addWeapon(toolList);
+        String toolList[] = {"Bagpipes",  "Drum", "Dulcimer", "Flute", "Lute", "Lyre",  "Horn","Pan flute", "Shawm",
+                "Viol"};
+        for (int i = 0; i<3; i++)
+        {
+            instrument = toolList[Character.rand.nextInt(toolList.length)];
+            System.out.println(instrument);
+            proficiency.addTool(instrument);
+        }
         return toolList;
     }
 
@@ -636,109 +648,93 @@ public class Cleric {
         int firstLevelRedo = 0;
 
         String[] damageCantrip = {
-                "Sacred Flame",
-                "Toll the Dead"
-        };
-        String[] utilityCantrip = {
-                "Guidance",
-                "Light",
-                "Thaumaturgy"
+                "Thunderclap",
+                "Vicious Mockery"
         };
         String[] allCantrips = {
-                "Guidance",
-                "Light",
-                "Mending",
-                "Resistance",
-                "Sacred Flame",
-                "Spare the Dying",
-                "Thaumaturgy",
-                "Toll the Dead"
+                "Blade Ward", "Dancing Lights", "Friends", "Light", "Mage Hand", "Mending", "Message",
+                "Minor Illusion", "Prestidigitation", "Thunderclap", "True Strike", "Vicious Mockery"
         };
 
-        clericSpells.addCantrip(damageCantrip[Character.rand.nextInt(damageCantrip.length)]);
-        clericSpells.addCantrip(utilityCantrip[Character.rand.nextInt(utilityCantrip.length)]);
+        bardSpells.addCantrip(damageCantrip[Character.rand.nextInt(damageCantrip.length)]);
         do {
-        }while (clericSpells.addCantrip(allCantrips[Character.rand.nextInt(allCantrips.length)]) > 0);
+        }while (bardSpells.addCantrip(allCantrips[Character.rand.nextInt(allCantrips.length)]) > 0);
 
         String[] heal1 = {
                 "Cure Wounds",
-                "Healing Word"
+                "Healing Word",
+                "Heroism"
         };
 
-        String[] buff1 = {
-                "Bless",
-                "Sanctuary",
-                "Shield of Faith",
-                "Protection from Evil and Good"
+        String[] utility1 = {
+                "Charm Person",
+                "Disguise Self",
+                "Feather Fall",
+                "Longstrider",
+                "Silent Image"
         };
 
         String[] debuff1 = {
                 "Bane",
-                "Command"
+                "Faerie Fire",
+                "Hideous Laughter",
+                "Sleep",
+                "Thunderwave"
         };
 
-        String[] damage1 = {
-                "Inflict Wounds",
-                "Guiding Bolt"
+        String[] ritual1 = {
+                "Animal Friendship",
+                "Comprehend Languages",
+                "Detect Magic",
+                "Identify",
+                "Illusiory Script",
+                "Speak with Animals",
+                "Unseen Servant"
         };
 
         String[] all1 = {
-                "Inflict Wounds",
-                "Guiding Bolt",
+                "Animal Friendship",
                 "Bane",
-                "Command",
-                "Bless",
-                "Sanctuary",
-                "Shield of Faith",
-                "Protection from Evil and Good",
+                "Charm Person",
+                "Comprehend Languages",
                 "Cure Wounds",
-                "Healing Word",
-                "Create or Destroy Water",
-                "Detect Evil and Good",
                 "Detect Magic",
-                "Detect Poison and Disease",
-                "Purify Food and Drink"
+                "Disguise Self",
+                "Faerie Fire",
+                "Feather Fall",
+                "Healing Word",
+                "Heroism",
+                "Hideous Laughter",
+                "Identify",
+                "Illusiory Script",
+                "Longstrider",
+                "Silent Image",
+                "Sleep",
+                "Speak with Animals",
+                "Thunderwave",
+                "Unseen Servant"
         };
-        switch (spellNumber)
-        {
-            case 6:
-            case 5:
-            case 4:
-                firstLevelRedo += clericSpells.addFirstLevel(damage1[Character.rand.nextInt(damage1.length)]);
-            case 3:
-                firstLevelRedo += clericSpells.addFirstLevel(debuff1[Character.rand.nextInt(debuff1.length)]);
-            case 2:
-                firstLevelRedo += clericSpells.addFirstLevel(buff1[Character.rand.nextInt(buff1.length)]);
-            case 1:
-                firstLevelRedo += clericSpells.addFirstLevel(heal1[Character.rand.nextInt(heal1.length)]);
 
-        }
+        firstLevelRedo += bardSpells.addFirstLevel(ritual1[Character.rand.nextInt(ritual1.length)]);
+        firstLevelRedo += bardSpells.addFirstLevel(debuff1[Character.rand.nextInt(debuff1.length)]);
+        firstLevelRedo += bardSpells.addFirstLevel(utility1[Character.rand.nextInt(utility1.length)]);
+        firstLevelRedo += bardSpells.addFirstLevel(heal1[Character.rand.nextInt(heal1.length)]);
+
 
         System.out.println("SPELL RETRY: "+firstLevelRedo);
-        for (int i = 4; i < spellNumber; i++)
-        {
-            firstLevelRedo+= clericSpells.addFirstLevel(all1[Character.rand.nextInt(all1.length)]);
-        }
-        System.out.println("SPELL RETRY 2: "+firstLevelRedo);
+
         while (firstLevelRedo != 0){
-            System.out.println("RETRYING. FLR = "+firstLevelRedo);
             int retry = firstLevelRedo;
             firstLevelRedo=0;
             for (int j = 0; j < retry;j++){
-                firstLevelRedo+= clericSpells.addFirstLevel(all1[Character.rand.nextInt(all1.length)]);
+                firstLevelRedo+= bardSpells.addFirstLevel(all1[Character.rand.nextInt(all1.length)]);
             }
         }
 
         String[][] returnArray = {
-                clericSpells.getCantrips(), clericSpells.getFirstLevel()
+                bardSpells.getCantrips(), bardSpells.getFirstLevel()
         };
         return returnArray;
 
     }
-
-
-    //----------------------------------------------------------------------------------------------------------------------
-//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Ability Fun Times<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-//----------------------------------------------------------------------------------------------------------------------
-
 }

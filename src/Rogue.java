@@ -373,7 +373,6 @@ public class Rogue {//the majority of Rogue is the same as fighter. I'll mark th
 
     public void createFirstLevel() throws IOException {
 
-        stat.generate();
         assignStats();
         ancestry = decideAncestry();
         stat.createModifiers();
