@@ -2,7 +2,7 @@
 //out all together, super easily.
 public class Features {
     private String[][] features = new String[20][2];
-    private int[] featureUses = new int[20];
+    private int[][] featureUses = new int[20][2];
     private int featureIndex = 0;
     private int darkvisionRange = 0;
     private int speed = 0;
@@ -32,11 +32,35 @@ public class Features {
     {
         features[featureIndex][0] = title;
         features[featureIndex][1] = description;
-        if (uses.length==1)
+        if (uses.length>=1)
         {
-            featureUses[featureIndex]= uses[0];
+            featureUses[featureIndex][0]= uses[0];
+        }
+        if (uses.length == 2)
+        {
+            featureUses[featureIndex][1] = uses[1];
         }
         featureIndex++;//adds a feature to teh feature array
+    }
+
+    public boolean updateFeature (String title, String descriptionUpdate, int... usesUpdate)
+    {
+        for (int i = 0; i < featureIndex; i ++)
+        {
+            if (features[i][0].equalsIgnoreCase(title))
+            {
+                if (!descriptionUpdate.isEmpty())
+                {
+                    features[i][2] = descriptionUpdate;
+                }
+                if (usesUpdate.length>=1)
+                {
+                    featureUses[i][0] = usesUpdate[0];
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
     public String getFeatures()
@@ -50,12 +74,18 @@ public class Features {
                 break;
             }
             output += features[i][0];
-            if (featureUses[i]!=0)
+            if (featureUses[i][0]!=0)
             {
-                output += " (  ";
-                for (int k = 1; k < featureUses[i]; k++)
+                output += " (";
+                if (featureUses[i][1]!=1) {
+                    output+="  ";
+                    for (int k = 1; k < featureUses[i][0]; k++) {
+                        output += "|  ";
+                    }
+                }
+                else
                 {
-                    output += "|  ";
+                    output+= "__/"+featureUses[i][0];
                 }
                 output += ")";
             }

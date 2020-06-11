@@ -321,6 +321,16 @@ public class Weapons {
         return false;
     }
 
+    public static String[] simpleMeleeList()
+    {
+        String[] returnString = new String[weaponList[0].length];
+        for (int i = 0; i < weaponList[0].length; i++)
+        {
+            returnString[i] = weaponList[0][i][0];
+        }
+        return returnString;
+    }
+
     public static String[] oneHandedWeapon (String... weapon)//checks to see if a weapon can be weilded in one hand (if it doesn't have the "two-handed" tag
     {
         String[] tempOutput = new String[weapon.length];
